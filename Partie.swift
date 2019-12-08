@@ -19,6 +19,8 @@ protocol TPartie{
   // Indique le joueur courant
   // Post: Retourne le joueur qui fait son tour , joueur1 ou joueur2
 	var joueurCourant : Joueur {get} 
+
+	var grille : [[Carte?]] {get set}
 	
 	// init : Joueur x Joueur-> Partie
 	// Création de la partie
@@ -112,8 +114,43 @@ protocol TPartie{
 }
 
 Class Partie : TPartie{
+
 	var joueur1 : Joueur
 	var joueur2 : Joueur
 	var carteCourante : Carte
 	var joueurCourant : Joueur
+	var grille : [[Pion?](5)](5) {get set}
+	var deck : [Carte](2) {get set}
+
+	init(j1 : Joueur, j2 : Joueur){
+
+		for i in 0..< 5{
+			for j in 0..< 5{
+				//problème pour placer des pions sur la grille, il faut créer les pions ici ??
+				grille[i+1][j] = nil
+			}
+		}
+
+		j1.couleur = Rouge
+		j2.couleur = Bleu
+		j1.deck[0] = "carte1"
+		j1.deck[1] = "carte2"
+		j2.deck[0] = "carte3"
+		j2.deck[1] = "carte4"
+
+		let nb = Int.random(in: 1 .. 2)
+
+		if nb == 1{
+			joueurCourant = j1
+		}else{
+			joueurCourant = j2
+		}
+		
+		carteCourante = "carte5"
+
+	}
+
+	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
+		
+	}
 }

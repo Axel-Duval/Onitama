@@ -87,7 +87,7 @@ Class Joueur : TJoueur {
 
 	func supprimerPion(p : Pion) -> Bool{
 		var res = [Pion]()
-		for i in 0..<self.nombrePions(){
+		for i in 0..< self.nombrePions(){
 			if(self.afficherPions()[i] !== p){
 				res.append(self.afficherPions()[i])
 			}
