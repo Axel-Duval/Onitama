@@ -119,20 +119,42 @@ Class Partie : TPartie{
 	var joueur2 : Joueur
 	var carteCourante : Carte
 	var joueurCourant : Joueur
-	var grille : [[Pion?](5)](5) {get set}
+	var estFinie : Bool
+	//on créé un deck
 	var deck : [Carte](2) {get set}
+	//on créé les pions du joueur 1
+	var p1 : Pion
+	var p2 : Pion
+	var p3 : Pion
+	var p4 : Pion
+	var p5 : Pion 
+	//on créé les pions du joueur 2
+	var p6 : Pion 
+	var p7 : Pion 
+	var p8 : Pion 
+	var p9 : Pion 
+	var p10 : Pion
+
 
 	init(j1 : Joueur, j2 : Joueur){
 
-		for i in 0..< 5{
-			for j in 0..< 5{
-				//problème pour placer des pions sur la grille, il faut créer les pions ici ??
-				grille[i+1][j] = nil
-			}
-		}
+		estFinie = false
+		//on initialise les pions du joueur 1
+		p1 = Pion(j : Joueur1, maitre : false, pos : je peux rien mettre maybe on redéfini position etant juste un type (x : int, y : int) ducoup ici (x : 0, y : 0))
+		p2 = Pion(j : Joueur1, maitre : false, pos : (x : 0 , y : 1))
+		p3 = Pion(j : Joueur1, maitre : true, pos : (x : 0 , y : 2))
+		p4 = Pion(j : Joueur1, maitre : false, pos : (x : 0 , y : 3))
+		p5 = Pion(j : Joueur1, maitre : false, pos : (x : 0 , y : 4))
+		//on initialise les pions du joueur 2
+		p6 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y : 0))
+		p7 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y : 1))
+		p8 = Pion(j : Joueur2, maitre : true, pos : (x : 4 , y : 2))
+		p9 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y : 3))
+		vp10 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y :4))
 
 		j1.couleur = Rouge
 		j2.couleur = Bleu
+		//on initialise les decks
 		j1.deck[0] = "carte1"
 		j1.deck[1] = "carte2"
 		j2.deck[0] = "carte3"
@@ -149,8 +171,24 @@ Class Partie : TPartie{
 		carteCourante = "carte5"
 
 	}
-
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
 		
+		if ((p3.pos == (x : 4, y : 2)) || (p8.pos == (x : 0, y : 2))){
+			self.estFinie = true
+		}//definir une seconde position lorsque les pions ne sont plus sur le plateau (pour verifier si le pion maitre d'un joueur est toujours en vie)
+		return self.estFinie
 	}
+
+	func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
+
+	func gagnant(){
+
+		if ((p3.pos == (x : 4, y : 2)) || (p3.pos == ?)) { // pareil ou est le maitre si il est mangé
+			return self.joueur1
+		}else if ((p8.pos == (x : 0, y : 2)) || (p8.pos == ?)){
+			return self.joueur2
+		}
+
+	}
+
 }
