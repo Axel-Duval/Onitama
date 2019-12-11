@@ -54,23 +54,25 @@ protocol TJoueur{
 	func supprimerPion(p : Pion) -> Bool
 }
 
-Class Joueur : TJoueur {
+class Joueur : TJoueur {
 	var listeCartes : [Carte]
 	var listePions : [Pion]
 	var nom : String
 	var couleur : Couleur 
 
 
-	init(nom : String, couleur : Couleur){
+	required init(nom : String, couleur : Couleur){
 		self.nom = nom
 		self.couleur = couleur
+		self.listePions = []
+		self.listeCartes = []
 		//init de pions sans position
-		var pos : Position = Position(x : -1, y : -1, pion : nil)
-		var p1 : Pion = Pion(j : self, maitre : false, position : pos)
-		var p2 : Pion = Pion(j : self, maitre : true, position : pos)
-		self.listePions = [p1, p2, p1, p1, p1]
+		let pos : Position = Position(x : -10, y : -10, pion : nil)
+		let p1 : Pion = Pion(j : self, maitre : false, position : pos)
+		let p2 : Pion = Pion(j : self, maitre : true, position : pos)
+		self.listePions = [p1, p1, p2, p1, p1]
 		//init de fausse cartes
-		var c1 : Carte = Carte(nom : "pour init", couleur : couleur, listeMouvements : [pos])
+		let c1 : Carte = Carte(nom : "pour init", couleur : couleur, listeMouvements : [pos])
 		self.listeCartes = [c1,c1]
 	}
 
@@ -96,13 +98,13 @@ Class Joueur : TJoueur {
 
 	func supprimerPion(p : Pion) -> Bool{
 		var res = [Pion]()
-		for i in 0..< self.nombrePions(){
+		let temp = self.nombrePions()
+		for i in 0..<(self.nombrePions()){
 			if(self.afficherPions()[i] !== p){
 				res.append(self.afficherPions()[i])
 			}
 		}
-		var temp = self.afficherPions()
-		self.pions = res
-		return (temp == self.afficherPions())
+		self.listePions = res
+		return (temp == self.nombrePions()+1)
 	}
 }

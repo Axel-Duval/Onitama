@@ -4,6 +4,7 @@ protocol TPion{
 	// Post: Retourne la position du pion
 	var position : Position {get set}
 
+	var joueur : Joueur {get}
 
 	private var estMaitre : Bool {get}
 
@@ -20,13 +21,13 @@ protocol TPion{
 	init(j : Joueur, maitre : Bool, position : Position)
 }
 
-Class Pion : TPion{
+class Pion : TPion {
 
 	var maitre : Bool
 	var joueur : Joueur
 	var position : Position
 
-	init(j : Joueur, maitre : Bool, position : Position){
+	required init(j : Joueur, maitre : Bool, position : Position){
 		self.joueur = j
 		self.maitre = maitre
 		self.position = position

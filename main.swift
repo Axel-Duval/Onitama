@@ -29,7 +29,7 @@ func affichePlateau(partie : Partie){
 				ligne = ligne + " \t"
 			}
 			else{
-				let pionCourant : Pion = partie.getPosition(x : l, y : c).getPion()
+				let pionCourant : Pion = partie.getPosition(x : l, y : c).getPion()!
 				var forme : String
 				if (partie.joueurCourant.couleur == partie.joueur1.couleur){
 					// les pions du joueur 1 prend la forme O
@@ -98,7 +98,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 		let mouvementChoisi : Position = partie.selectPosition(mouvements : mouvementsP, indice : indiceMouvement)
 
 		if (mouvementChoisi.positionOcc()) {
-			let pionCapture : Pion = mouvementChoisi.getPion()
+			let pionCapture : Pion = mouvementChoisi.getPion()!
 			if(partie.capturePion(p : pionCapture)){
 				print("Vous avez capturé un pion")
 			}
@@ -107,7 +107,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 		partie.echangerCarte(l1 : partie.joueurCourant.listeCartes, c1 : carteChoisi, c2 : partie.carteCourante)
 	}		
 	affichePlateau(partie : partie)
-	partie.changerJoueur(p : partie)
+	partie.changerJoueur()
 }
 
 if (partie.gagnant().couleur == partie.joueur1.couleur) {

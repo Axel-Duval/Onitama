@@ -27,12 +27,12 @@ protocol TCarte{
 	func afficherCarte() -> String
 }
 
-Class Carte : TCarte{
+class Carte : TCarte{
 	var nom : String
 	var couleur : Couleur
 	var listeMouvements : [Position]
 
-	init(nom : String, couleur : Couleur, listeMouvements : [Position]){
+	required init(nom : String, couleur : Couleur, listeMouvements : [Position]){
 		self.nom = nom
 		self.couleur = couleur
 		self.listeMouvements = listeMouvements

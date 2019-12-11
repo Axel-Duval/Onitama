@@ -20,8 +20,6 @@ protocol TPartie{
   // Post: Retourne le joueur qui fait son tour , joueur1 ou joueur2
 	var joueurCourant : Joueur {get} 
 
-	var grille : [[Carte?]] {get set}
-	
 	// init : Joueur x Joueur-> Partie
 	// Création de la partie
 	// Pré: rien
@@ -40,14 +38,14 @@ protocol TPartie{
 	// test la couleur du joueur avec la couleur de la carte courante
 	// if partie.carteCourant.couleur == joueur1.couleur puis partie.joueurCourant = joueur1 
 	// et return joueur1 else partie.joueurCourant = joueur2 return joueur2
-	func premierTour(p : Partie, c : Carte) -> Joueur
+	//func premierTour(p : Partie, c : Carte) -> Joueur
 
 	// changerJoueur: Partie
 	// changer le joueur courant
 	// si joueur1 est le joueur courant, joueur 2 devient le joueur courant et vice versa
 	// Pré: !estFinie
 	// Post : le joueurCourant est échangé
-	func changerJoueur(p : Partie)
+	func changerJoueur()
 
 	// gagnant: -> Joueur
 	// Si la partie est terminée, renvoie le joueur gagnant
@@ -107,63 +105,171 @@ protocol TPartie{
   
  // selectPosiion: [Position] x Int -> Postion
 	// Le joueur curant selectionne une carte
-	// Ind est l'indice de la posion choisie dans la liste des mouvements possibles du joueur courant
+	// Ind est l'indice de la position choisie dans la liste des mouvements possibles du joueur courant
   // Pré: La position choisie doit être dans la liste de mouvements posibles du joueur
   // Post: Retourne la position choisie
-	func selectPosition(mouvements : [Position],Ind:Int) -> Position
+	func selectPosition(mouvements : [Position], indice : Int) -> Position
 }
 
-Class Partie : TPartie{
-
+class Partie : TPartie {
 	var joueur1 : Joueur
 	var joueur2 : Joueur
 	var carteCourante : Carte
 	var joueurCourant : Joueur
 	var estFinie : Bool
-	//on a créé un deck
-	var deck : [Carte](2) {get set}
+	var plateau : [[Position]]
 
-	init(j1 : Joueur, j2 : Joueur){
+	required init(j1 : Joueur, j2 : Joueur){
 		self.joueur1 = j1
 		self.joueur2 = j2
-		estFinie = false
-		joueurCourant = [j1,j2].randomElement()
+		self.estFinie = false
+		self.joueurCourant = [j1,j2].randomElement()!
+		//On creer les mouvements pour les deplacements
+		let arriere : Position = Position(x : 1, y : 0, pion : nil)
+		let avant : Position = Position(x : -1, y : 0, pion : nil)
+		let gauche : Position = Position(x : 0, y : -1, pion : nil)
+		let droite : Position = Position(x : 0, y : 1, pion : nil)
+		let diago_avant_droite : Position = Position(x : -1, y : 1, pion : nil)
+		let diago_avant_gauche : Position = Position(x : -1, y : -1, pion : nil)
+		let diago_arriere_gauche : Position = Position(x : 1, y : -1, pion : nil)
+		let diago_arriere_droite : Position = Position(x : 1, y : 1, pion : nil)
+		let double_arriere : Position = Position(x : 2, y : 0, pion : nil)
+		let double_avant : Position = Position(x : -2, y : 0, pion : nil)
+		let double_gauche : Position = Position(x : 0, y : -2, pion : nil)
+		let double_droite : Position = Position(x : 0, y : 2, pion : nil)
+		let double_diago_avant_droite : Position = Position(x : -1, y : 2, pion : nil)
+		let double_diago_avant_gauche : Position = Position(x : -1, y : -2, pion : nil)
 		//On creer les cartes
-		var arriere : Position = Position(x : 0, y : -1, pion : nil)
-		var avant : Position = Position(x : 0, y : 1, pion : nil)
-		var gauche : Position = Position(x : -1, y : 0, pion : nil)
-		var droite : Position = Position(x : 1, y : 0, pion : nil)
-		var diago_avant_droite : Position = Position(x : 1, y : -1, pion : nil)
-		var diago_avant_gauche : Position = Position(x : -1, y : -1, pion : nil)
-		var diago_arriere_gauche : Position = Position(x : -1, y : 1, pion : nil)
-		var diago_arriere_droite : Position = Position(x : 1, y : 1, pion : nil)
-
-		var dragon : Carte = Carte(nom : "Dragon", couleur : Couleur.Rouge, listeMouvements : [avant,arriere,droite,gauche])
-		var renard : Carte = Carte(nom : "Renard", couleur : Couleur.Rouge, listeMouvements : [avant])
-		//On definit une position pour chaque pion d'un joueur
-
-		var all_cards = [dragon,renard...]
-		
-
+		let hahn : Carte = Carte(nom : "hahn", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
+		let krabbe : Carte = Carte(nom : "krabbe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
+		let wild : Carte = Carte(nom : "wild-schwein", couleur : Couleur.Rouge, listeMouvements : [avant,droite,gauche])
+		let drache : Carte = Carte(nom : "drache", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_arriere_droite,double_diago_avant_gauche,double_diago_avant_gauche])
+		let affe : Carte = Carte(nom : "affe", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_gauche,diago_avant_droite,diago_arriere_droite])
+		//On affecte les cartes aux joueurs
+		var all_cards : [Carte] = [hahn,krabbe,wild,drache,affe]
+		var cards : [Carte] = all_cards.shuffled()
+		self.joueur1.listeCartes = [cards[0],cards[1]]
+		self.joueur2.listeCartes = [cards[2],cards[3]]
+		self.carteCourante = cards[4]
+		//On creer les 25 positions
+		for l in 0...4{
+			for c in 0...4{
+				self.plateau[l][c] = Position(x : l, y : c , pion : nil)
+			}
+		}
+		//On affecte la bonne position aux pions des 2 joueurs
+		for i in 0...4{
+			self.joueur1.afficherPions()[i].position = self.plateau[i][0]
+			self.joueur2.afficherPions()[i].position = self.plateau[i][4]
+			self.plateau[i][0].setPion(pion : self.joueur1.afficherPions()[i])
+			self.plateau[i][4].setPion(pion : self.joueur2.afficherPions()[i])
+		}
 	}
+
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
-		
-		if ((p3.pos == (x : 4, y : 2)) || (p8.pos == (x : 0, y : 2))){
-			self.estFinie = true
-		}//definir une seconde position lorsque les pions ne sont plus sur le plateau (pour verifier si le pion maitre d'un joueur est toujours en vie)
-		return self.estFinie
+		//On verifie que le maitre de chaque joueur
+		if ((j2.afficherPions()[2].position === plateau[2][0]) || (j1.afficherPions()[2].position === plateau[2][4])){
+			return true
+		}// on verifie ensuite que le pion maitre est encore sur le plateau, si celui-ci ne l'est plus on sait qu'il sera placé a la position (x=-1 et y=-1)
+		else if(((j2.afficherPions()[2].position.x == -1) && (j2.afficherPions()[2].position.y == -1)) || ((j1.afficherPions()[2].position.x == -1) && (j1.afficherPions()[2].position.y == -1))){
+			return true
+		}
+		else{
+			return false
+		}
 	}
 
-	func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
+	//func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
 
-	func gagnant(){
-
-		if ((p3.pos == (x : 4, y : 2)) || (p3.pos == ?)) { // pareil ou est le maitre si il est mangé
+	func gagnant() -> Joueur{
+		if ((self.joueur1.afficherPions()[2].position === plateau[2][4]) || ((self.joueur2.afficherPions()[2].position.x == -1) && (self.joueur2.afficherPions()[2].position.y == -1))){
 			return self.joueur1
-		}else if ((p8.pos == (x : 0, y : 2)) || (p8.pos == ?)){
+		}// on verifie ensuite que le pion maitre est encore sur le plateau, si celui-ci ne l'est plus on sait qu'il sera placé a la position (x=-1 et y=-1)
+		else if((self.joueur2.afficherPions()[2].position === plateau[2][0]) || ((self.joueur1.afficherPions()[2].position.x == -1) && (self.joueur1.afficherPions()[2].position.y == -1))){
 			return self.joueur2
 		}
-
 	}
 
+	func changerJoueur(){
+		if(self.joueurCourant === self.joueur1){
+			self.joueurCourant = joueur2
+		}
+		else{
+			self.joueurCourant = joueur1
+		}
+	}
+
+	func getPosition(x : Int, y : Int) -> Position{
+		return self.plateau[x][y]
+	}
+
+	func estPossible(c : Carte, p : Pion, pos : Position) -> Bool {
+		var new_x : Int = p.position.x + pos.x
+		var new_y : Int = p.position.y + pos.y
+		if ((new_x >= 0) && (new_x <= 4) && (new_y >= 0) && (new_y <= 4)){
+			if (!self.plateau[new_x][new_y].positionOcc()){
+				return true
+			}
+			else{
+				return self.plateau[new_x][new_y].getPion()!.joueur.couleur == p.joueur.couleur
+			}
+		}
+		else{
+			return false
+		}
+	}
+
+	func mouvementsPossibles(c : Carte, p : Pion) -> [Position] {
+		var res : [Position]
+		for elt in c.mouvement(){
+			if (estPossible(c : c, p : p, pos : elt)){
+				res.append(elt)
+			}
+		}
+		return res
+	}
+
+	func nbMouvementsPossibles(c : Carte, p : Pion) -> Int {
+		return self.mouvementsPossibles(c : c, p : p).count
+	}
+
+	func deplacerPion(p : Pion, pos : Position){
+		p.position = pos
+		if (pos.positionOcc()){
+			capturePion(p : pos.getPion()!)
+		}
+		self.plateau[pos.x][pos.y].pion = p
+	}
+
+	func capturePion(p : Pion) -> Bool {
+		p.position = Position(x : -10, y : -10, pion : p)
+	}
+
+	func selectPosition(mouvements : [Position], indice : Int) -> Position {
+		return mouvements[indice-1]
+	}
+
+	func peutJouer(j : Joueur) -> Bool {
+		for pion in j.afficherPions(){
+			for carte in j.afficherCartes(){
+				for deplacement in carte.mouvement(){
+					if (estPossible(c : carte, p : pion, pos : deplacement)){
+						return true
+					}
+				}
+			}
+		}
+		return false
+	}
+
+	func echangerCarte( l1 : [Carte], c1 : Carte, c2 : Carte){
+		var temp : Carte = c2
+		c2 = c1
+		if (l1[0] === c1){
+			l1[0] = temp
+		}
+		else{
+			l1[1] = temp
+		}
+	}
 }
