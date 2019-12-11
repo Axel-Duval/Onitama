@@ -120,55 +120,30 @@ Class Partie : TPartie{
 	var carteCourante : Carte
 	var joueurCourant : Joueur
 	var estFinie : Bool
-	//on créé un deck
+	//on a créé un deck
 	var deck : [Carte](2) {get set}
-	//on créé les pions du joueur 1
-	var p1 : Pion
-	var p2 : Pion
-	var p3 : Pion
-	var p4 : Pion
-	var p5 : Pion 
-	//on créé les pions du joueur 2
-	var p6 : Pion 
-	var p7 : Pion 
-	var p8 : Pion 
-	var p9 : Pion 
-	var p10 : Pion
-
 
 	init(j1 : Joueur, j2 : Joueur){
-
+		self.joueur1 = j1
+		self.joueur2 = j2
 		estFinie = false
-		//on initialise les pions du joueur 1
-		p1 = Pion(j : Joueur1, maitre : false, pos : je peux rien mettre maybe on redéfini position etant juste un type (x : int, y : int) ducoup ici (x : 0, y : 0))
-		p2 = Pion(j : Joueur1, maitre : false, pos : (x : 0 , y : 1))
-		p3 = Pion(j : Joueur1, maitre : true, pos : (x : 0 , y : 2))
-		p4 = Pion(j : Joueur1, maitre : false, pos : (x : 0 , y : 3))
-		p5 = Pion(j : Joueur1, maitre : false, pos : (x : 0 , y : 4))
-		//on initialise les pions du joueur 2
-		p6 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y : 0))
-		p7 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y : 1))
-		p8 = Pion(j : Joueur2, maitre : true, pos : (x : 4 , y : 2))
-		p9 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y : 3))
-		vp10 = Pion(j : Joueur2, maitre : false, pos : (x : 4 , y :4))
+		joueurCourant = [j1,j2].randomElement()
+		//On creer les cartes
+		var arriere : Position = Position(x : 0, y : -1, pion : nil)
+		var avant : Position = Position(x : 0, y : 1, pion : nil)
+		var gauche : Position = Position(x : -1, y : 0, pion : nil)
+		var droite : Position = Position(x : 1, y : 0, pion : nil)
+		var diago_avant_droite : Position = Position(x : 1, y : -1, pion : nil)
+		var diago_avant_gauche : Position = Position(x : -1, y : -1, pion : nil)
+		var diago_arriere_gauche : Position = Position(x : -1, y : 1, pion : nil)
+		var diago_arriere_droite : Position = Position(x : 1, y : 1, pion : nil)
 
-		j1.couleur = Rouge
-		j2.couleur = Bleu
-		//on initialise les decks
-		j1.deck[0] = "carte1"
-		j1.deck[1] = "carte2"
-		j2.deck[0] = "carte3"
-		j2.deck[1] = "carte4"
+		var dragon : Carte = Carte(nom : "Dragon", couleur : Couleur.Rouge, listeMouvements : [avant,arriere,droite,gauche])
+		var renard : Carte = Carte(nom : "Renard", couleur : Couleur.Rouge, listeMouvements : [avant])
+		//On definit une position pour chaque pion d'un joueur
 
-		let nb = Int.random(in: 1 .. 2)
-
-		if nb == 1{
-			joueurCourant = j1
-		}else{
-			joueurCourant = j2
-		}
+		var all_cards = [dragon,renard...]
 		
-		carteCourante = "carte5"
 
 	}
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{

@@ -18,13 +18,13 @@ protocol TCarte{
 	// Liste de mouvements possibles pour une carte
 	// Pré: !estFinie
 	// Post: Retourne une liste de positions possibles pour une carte
-	func mouvement(c : Carte) -> [Position]
+	func mouvement() -> [Position]
 
 	//afficherCarte: Carte -> String
 	// Affiche les propriétés d'une carte
 	// Pré: estFinie = false
 	// Post: retourne un string qui contient le nom et la couleur de la carte (autres params possible)
-	func afficherCarte(c : Carte) -> String
+	func afficherCarte() -> String
 }
 
 Class Carte : TCarte{
@@ -38,11 +38,11 @@ Class Carte : TCarte{
 		self.listeMouvements = listeMouvements
 	}
 
-	func mouvement(c : Carte) -> [Position]{
+	func mouvement() -> [Position]{
 		return self.listeMouvements
 	}
 
-	func afficherCarte(c : Carte) -> String{
+	func afficherCarte() -> String{
 		let res : String = "\(self.nom) (\(self.couleur))"
 		return res
 	}

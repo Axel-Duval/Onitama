@@ -2,7 +2,10 @@ protocol TPion{
 	// position : Pion -> Position
 	// Indique la position du pion
 	// Post: Retourne la position du pion
-	var position : Position {get}
+	var position : Position {get set}
+
+
+	private var estMaitre : Bool {get}
 
 	// estMaitre: Pion -> Bool
 	// Indique si le pion est maitre
@@ -14,7 +17,7 @@ protocol TPion{
 	// Pré: le joueur existe et !estFinie
 	// Pré:	le joueur ne possede pas plus de 5 pions déjà
 	// Post: ajout du pion dans la liste de pions du joueur
-	init(j : Joueur, maitre : Bool, pos : Position)
+	init(j : Joueur, maitre : Bool, position : Position)
 }
 
 Class Pion : TPion{
@@ -23,13 +26,13 @@ Class Pion : TPion{
 	var joueur : Joueur
 	var position : Position
 
-	init(j : Joueur, maitre : Bool, pos : Position){
+	init(j : Joueur, maitre : Bool, position : Position){
 		self.joueur = j
 		self.maitre = maitre
-		self.position = pos
+		self.position = position
 	}
 
 	func estMaitre() -> Bool{
-		return self.maitre
+		return self.estMaitre
 	}
 }

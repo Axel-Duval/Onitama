@@ -58,11 +58,20 @@ Class Joueur : TJoueur {
 	var listeCartes : [Carte]
 	var listePions : [Pion]
 	var nom : String
-	var couleur : Couleur
+	var couleur : Couleur 
+
 
 	init(nom : String, couleur : Couleur){
 		self.nom = nom
 		self.couleur = couleur
+		//init de pions sans position
+		var pos : Position = Position(x : -1, y : -1, pion : nil)
+		var p1 : Pion = Pion(j : self, maitre : false, position : pos)
+		var p2 : Pion = Pion(j : self, maitre : true, position : pos)
+		self.listePions = [p1, p2, p1, p1, p1]
+		//init de fausse cartes
+		var c1 : Carte = Carte(nom : "pour init", couleur : couleur, listeMouvements : [pos])
+		self.listeCartes = [c1,c1]
 	}
 
 	func selectCarte(indice : Int) -> Carte{
