@@ -64,14 +64,15 @@ class Joueur : TJoueur {
 	required init(nom : String, couleur : Couleur){
 		self.nom = nom
 		self.couleur = couleur
+		//Obligation de definir des listes vides pour pouvoir ensuite initialiser les pions qui ont eux-meme besoin d'un joueur en parametre...
 		self.listePions = []
 		self.listeCartes = []
-		//init de pions sans position
+		//init de pions avec position absurde (pions pas sur le plateau)
 		let pos : Position = Position(x : -10, y : -10, pion : nil)
 		let p1 : Pion = Pion(j : self, maitre : false, position : pos)
 		let p2 : Pion = Pion(j : self, maitre : true, position : pos)
 		self.listePions = [p1, p1, p2, p1, p1]
-		//init de fausse cartes
+		//init de fausse cartes pour pouvoir ensuite leur donner une vrai valeur...
 		let c1 : Carte = Carte(nom : "pour init", couleur : couleur, listeMouvements : [pos])
 		self.listeCartes = [c1,c1]
 	}
