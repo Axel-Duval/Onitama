@@ -212,7 +212,7 @@ class Partie : TPartie {
 				return true
 			}
 			else{
-				return self.plateau[new_x][new_y].getPion()!.joueur.couleur == p.joueur.couleur
+				return self.plateau[new_x][new_y].getPion()!.joueur.couleur != p.joueur.couleur
 			}
 		}
 		else{
@@ -240,17 +240,18 @@ class Partie : TPartie {
 		if (pos.positionOcc()){//Dans le cas ou la position d'arrivee est occupee
 			capturePion(p : pos.getPion()!)
 		}
-		self.plateau[pos.x][pos.y].pion = p//On dit que lenouvel emplacement du pion est occupee
+		self.plateau[pos.x][pos.y].pion = p//On dit que le nouvel emplacement du pion est occupee
 	}
 
 	func capturePion(p : Pion) -> Bool {
 		changerJoueur()//on change de joueur courant
 		if (self.joueurCourant.supprimerPion(p : p)){
-			self.joueurCourant.supprimerPion(p : p)
+			self.joueurCourant.supprimerPion(p : p)//On supprime le pion du deck du joueur
 			changerJoueur()//on change de joueur courant
 			return true
 		}
 		else {
+			changerJoueur()
 			return false
 		}
 	}
