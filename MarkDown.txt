@@ -1,0 +1,52 @@
+# Onitama
+
+Voici quelques commentaires concernant les spécifications livrées pour le projet Onitama. Nous avons rencontré pas mal de difficultés concernant la compilation et la manipulation des **protocoles** reçus et nous avons été étonnés par l'appel de certaines fonctions et leurs paramètres. Il manque des spécifications concernant certaines fonctions car certains noms de fonctions ne sont pas en corrélation avec leur usage.
+
+## Carte
+
+Les fonctions suivantes prennent une carte en paramètre alors que ce n'est pas nécessaire.
+- **mouvement(c : Carte) -> [Position]**
+- **afficherCarte(c : Carte) -> String**
+
+A quoi sert la couleur d'une carte ? Nous ne l'avons pas utilisé car par manque de spécifications nous n'avons pas compris.
+
+## Joueur
+
+Nous avons besoin de stocker une **listePions** pour le joueur car on doit être en mesure d'utiliser les fonctions **afficherPions() -> [Pion]** , **nombrePions() -> Int** et **autres**. Il faut donc créer cette liste durant l'initialisation or pour créer un pion il faut lui attribuer un joueur (c'est le serpent qui se mord la queue). Donc nous avons défini un tableau vide pour **listePions** puis nous avons attribué des pions auxquels nous n'avons pas pu donner de position car la position dépends du joueur ! Donc l'affectation de la position se fait durant l'initialisation de la classe **Partie**. Même problème avec les cartes...
+
+## Partie
+
+Pourquoi donner les deux joueurs en paramètres de la fonction **estFinie(j1 : Joueur, j2 : Joueur) -> Bool** sachant qu'une partie possède déjà comme attribut ces deux mêmes joueurs ? Nous les avons utilisé mais c'est totalement inutile de les passer en paramètre...
+
+Pourquoi donner une partie en paramètre de la fonction **changerJoueur(p:Partie)** sachant qu'on travaille directement sur la partie elle-même (objet) ? Donc on a enlever le paramètre partie.
+
+Pourquoi dans la fonction **estPossible( c : Carte, p : Pion, pos : Position) -> Bool** on demande une carte en paramètre alors qu'on n'en a pas besoin pour retourner la bonne valeur de l'assertion ? Le pion et la position suffisent à dire si c'est possible ou non...
+
+Dans la fionction **echangerCarte(l1 : [Carte], c1 : Carte, c2 : Carte)** on demande une liste de cartes en paramètre en plus des deux cartes à échanger alors que ce n'est pas nécessaire. D'après vos spécifications, on utilise cette fonction exclusivement pour échanger la carte sélectionnée par un joueur avec la carte courante du jeu. Comme nous travaillons en programmation orientée objet il n'est pas nécessaire  (et même déconseillé) de passer en paramètre les attributs de la classe sur laquelle nous travaillons, donc pas besoin de donner la carte nécessaire ni la liste de carte du joueur courant. Donc nous avons utilisé votre fonction en ne nous servant que du paramètre ***carte choisie par le joueur courant (c1)*** donc je vous conseille pour la suite de faire attention à ça.
+
+
+## Pion
+
+Pourquoi mettre un attribut du type **Joueur** dans la fonction **init(j : Joueur, maitre : Bool, position : Position)** sachant que le joueur possède déjà comme attribut une liste de pions ? Donc on a laissé votre spécification pour qu'un pion possède un **Joueur** mais on ne s'en sert jamais...
+
+Votre fonction **func estMaitre() -> Bool** est inutilisable à proprement parlée car le fait d'être maître ou non n'est pas une propriété calculée, c'est une propriété stockée. Donc nous avons rajouté : **private var estMaitre : Bool**
+
+eee
+
+## Position
+
+On a été obligé de modifier **var pion : Pion** par **var pion : Pion?** car quand on utilise les positions pour des cartes on n'a pas besoin de pion.
+
+On a aussi été obligé de modifier vos spécifications car vous n'avez pas pris en compte le fait qu'une position pouvait être *absolue* ou *relative*. C'est a dire qu'il faut pouvoir autoriser une position (qui dans ce cas est un mouvement de carte) pour laquelle ***x=-1*** , ***y=-1*** pour pouvoir reculer en diagonale. Donc il faut enlever les restrictions sur les ***x*** et ***y*** pour qu'ils puissent être négatifs.
+
+Il aurait été préférable de différentier les ***positions*** et les ***mouvements*** dans le sens ou un mouvement ne doit pas avoir de pion en attribut.
+
+## Programme principal
+
+Attention gros problèmes d'***indentation*** dans votre programme principal.
+
+## Voir le projet
+
+Vous pouvez voir le projet fini sur :  ***[https://github.com/Axel-Duval/Onimata](https://github.com/Axel-Duval/Onimata)*** 
+
+
