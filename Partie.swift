@@ -123,7 +123,7 @@ class Partie : TPartie {
 		self.joueur1 = j1
 		self.joueur2 = j2
 		self.estFinie = false
-		self.joueurCourant = j1
+		self.joueurCourant = [j1,j2].randomElement()!
 		//On creer les mouvements pour les deplacements
 		let arriere : Position = Position(x : 1, y : 0, pion : nil)
 		let avant : Position = Position(x : -1, y : 0, pion : nil)
