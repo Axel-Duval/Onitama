@@ -6,7 +6,7 @@ protocol TPion{
 
 	var joueur : Joueur {get}
 
-	private var estMaitre : Bool {get}
+
 
 	// estMaitre: Pion -> Bool
 	// Indique si le pion est maitre
@@ -23,7 +23,7 @@ protocol TPion{
 
 class Pion : TPion {
 
-	var maitre : Bool
+	private var maitre : Bool
 	var joueur : Joueur
 	var position : Position
 
@@ -34,6 +34,6 @@ class Pion : TPion {
 	}
 
 	func estMaitre() -> Bool{
-		return self.estMaitre
+		return self.estMaitre()
 	}
 }

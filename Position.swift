@@ -28,9 +28,9 @@ protocol TPosition{
 	// getPion: Position -> Pion
 	// Indique si un pion est sur une position
 	// retourne le pion sur la position, sinon retourne erreur
-	func getPion() -> Pion
+	func getPion() -> Pion?
 
-	func setPion(pion : Pion)
+	func setPion(pion : Pion?)
 }
 
 class Position : TPosition{

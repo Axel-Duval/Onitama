@@ -152,9 +152,10 @@ class Partie : TPartie {
 		self.joueur2.listeCartes = [cards[2],cards[3]]
 		self.carteCourante = cards[4]
 		//On creer les 25 positions
+		self.plateau = [[Position]](repeating : [Position](repeating : Position(x : 0, y : 0, pion : nil), count : 5), count : 5)
 		for l in 0...4{
 			for c in 0...4{
-				self.plateau[l][c] = Position(x : l, y : c , pion : nil)
+				self.plateau[l][c] = Position(x : l, y : c, pion : nil)
 			}
 		}
 		//On affecte la bonne position aux pions des 2 joueurs
@@ -184,8 +185,8 @@ class Partie : TPartie {
 	func gagnant() -> Joueur{
 		if ((self.joueur1.afficherPions()[2].position === plateau[2][4]) || ((self.joueur2.afficherPions()[2].position.x == -1) && (self.joueur2.afficherPions()[2].position.y == -1))){
 			return self.joueur1
-		}// on verifie ensuite que le pion maitre est encore sur le plateau, si celui-ci ne l'est plus on sait qu'il sera placé a la position (x=-1 et y=-1)
-		else if((self.joueur2.afficherPions()[2].position === plateau[2][0]) || ((self.joueur1.afficherPions()[2].position.x == -1) && (self.joueur1.afficherPions()[2].position.y == -1))){
+		}
+		else {
 			return self.joueur2
 		}
 	}
@@ -220,7 +221,7 @@ class Partie : TPartie {
 	}
 
 	func mouvementsPossibles(c : Carte, p : Pion) -> [Position] {
-		var res : [Position]
+		var res : [Position] = []
 		for elt in c.mouvement(){
 			if (estPossible(c : c, p : p, pos : elt)){
 				res.append(elt)
