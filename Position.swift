@@ -52,7 +52,7 @@ class Position : TPosition{
 		return self.pion
 	}
 
-	func setPion(pion : Pion){
+	func setPion(pion : Pion?){
 		self.pion = pion
 	}
 }

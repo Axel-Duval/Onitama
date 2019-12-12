@@ -234,15 +234,24 @@ class Partie : TPartie {
 	}
 
 	func deplacerPion(p : Pion, pos : Position){
-		p.position = pos
-		if (pos.positionOcc()){
+		self.plateau[p.position.x][p.position.y].setPion(pion : nil)//on dit que l'emplacement actuel du pion va devenir vide
+		p.position = pos//on dit que la position du pion est la nouvelle position
+		if (pos.positionOcc()){//Dans le cas ou la position d'arrivee est occupee
 			capturePion(p : pos.getPion()!)
 		}
-		self.plateau[pos.x][pos.y].pion = p
+		self.plateau[pos.x][pos.y].pion = p//On dit que lenouvel emplacement du pion est occupee
 	}
 
 	func capturePion(p : Pion) -> Bool {
-		p.position = Position(x : -10, y : -10, pion : p)
+		changerJoueur()//on change de joueur courant
+		if (self.joueurCourant.supprimerPion(p : p)){
+			self.joueurCourant.supprimerPion(p : p)
+			changerJoueur()//on change de joueur courant
+			return true
+		}
+		else {
+			return false
+		}
 	}
 
 	func selectPosition(mouvements : [Position], indice : Int) -> Position {
@@ -263,13 +272,14 @@ class Partie : TPartie {
 	}
 
 	func echangerCarte( l1 : [Carte], c1 : Carte, c2 : Carte){
-		var temp : Carte = c2
-		c2 = c1
-		if (l1[0] === c1){
-			l1[0] = temp
+		var temp : Carte = self.carteCourante
+		self.carteCourante = c1
+		//On cherche la carte c1 dans le deck du joueur courant et on l'echange avec temp (ancienne carte courante)
+		if (self.joueurCourant.listeCartes[0] === c1){
+			self.joueurCourant.listeCartes[0] = temp
 		}
-		else{
-			l1[1] = temp
+		else {
+			self.joueurCourant.listeCartes[1] = temp
 		}
 	}
 }
