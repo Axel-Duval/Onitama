@@ -117,7 +117,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
 				//Il capture le pion adverse
-				partie.capturePion(p : mouvementChoisi.getPion()!))
+				partie.capturePion(p : mouvementChoisi.getPion()!)
 				print("Vous avez capturé un pion adverse")
 			}
 			//On deplace reelement le pion a son nouvel emplacement

@@ -168,26 +168,47 @@ class Partie : TPartie {
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
-		//On verifie que le maitre de chaque joueur
-		if ((j2.afficherPions()[2].position === plateau[2][0]) || (j1.afficherPions()[2].position === plateau[2][4])){
-			return true
-		}// on verifie ensuite que le pion maitre est encore sur le plateau, si celui-ci ne l'est plus on sait qu'il sera placé a la position (x=-1 et y=-1)
-		else if(((j2.afficherPions()[2].position.x == -1) && (j2.afficherPions()[2].position.y == -1)) || ((j1.afficherPions()[2].position.x == -1) && (j1.afficherPions()[2].position.y == -1))){
+		//J1 ou j2 n'as plus de pions
+		if(j1.nombrePions() == 0) || (j2.nombrePions() == 0){
 			return true
 		}
 		else{
-			return false
+			//On regarde si les deux joueurs possedent encore leurs maitres
+			var finie : Bool = false
+			for elt in j1.afficherPions(){
+				if (elt.estMaitre()){
+					finie = true
+				}
+			}
+			for elt in j2.afficherPions(){
+				if (elt.estMaitre()){
+					finie = true
+				}
+			}
+			return finie
 		}
 	}
 
 	//func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
 
 	func gagnant() -> Joueur{
-		if ((self.joueur1.afficherPions()[2].position === plateau[2][4]) || ((self.joueur2.afficherPions()[2].position.x == -1) && (self.joueur2.afficherPions()[2].position.y == -1))){
+		//Si le joueur 2 a perdu tous ses pions
+		if (j2.nombrePions() == 0){
 			return self.joueur1
 		}
-		else {
+		//Si le joueur 1 a perdu tous ses pions
+		else if (j1.nombrePions() == 0){
 			return self.joueur2
+		}
+		else{
+			//Si le joueur 2 a perdu son maitre alors joueur 1 gagne sinon c'est l'inverse
+			var winner : Joueur = self.joueur1
+			for elt in j2.afficherPions(){
+				if (elt.estMaitre()){
+					winner = self.joueur2
+				}
+			}
+			return winner
 		}
 	}
 
@@ -200,7 +221,7 @@ class Partie : TPartie {
 		}
 	}
 
-	func getPosition(x : Int, y : Int) -> Position{
+	func getPosition(x : Int, y : Int) -> Position {
 		return self.plateau[x][y]
 	}
 
