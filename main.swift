@@ -25,25 +25,31 @@ func affichePlateau(partie : Partie){
 	for l in 0...4{
 		ligne = String(l+1)
 		for c in 0...4{
+
 			if !partie.getPosition(x : l, y : c).positionOcc(){
 				ligne = ligne + " \t"
+
 			}
 			else{
-				let pionCourant : Pion = partie.getPosition(x : l, y : c).getPion()!
-				var forme : String
-				if (partie.joueurCourant.couleur == partie.joueur1.couleur){
-					// les pions du joueur 1 prend la forme O
-					forme = "O"
+				var pionCourant : Pion
+				if let x = partie.getPosition(x : l, y : c).getPion(){
+					pionCourant = x
+					var forme : String
+					if (partie.joueurCourant.couleur == partie.joueur1.couleur){
+						// les pions du joueur 1 prend la forme O
+						forme = "O"
+					}
+					else{
+						// les pions du joueur 2 prend la forme X
+						forme = "X"
+					}
+					if(pionCourant.estMaitre()){
+						// les maitres prennent la forme suivante : <X> ou <O>
+						forme = "<" + forme + ">"
+					}
+					ligne = ligne + forme
 				}
-				else{
-					// les pions du joueur 2 prend la forme X
-					forme = "X"
-				}
-				if(pionCourant.estMaitre()){
-					// les maitres prennent la forme suivante : <X> ou <O>
-					forme = "<" + forme + ">"
-				}
-			ligne = ligne + forme
+				
 			}
 		}
 	}
@@ -70,17 +76,16 @@ var nomjoueur2 : String = saisirNom()
 
 var joueur1: Joueur = Joueur(nom : nomjoueur1, couleur : Couleur.Rouge)
 var joueur2: Joueur = Joueur(nom : nomjoueur2, couleur : Couleur.Bleu)
-
 var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 
 
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
+
 	affichePlateau(partie : partie)
 	print("Voici vos pions :")
 	print (partie.joueurCourant.afficherPions())
 	print("Voici vos cartes :")
 	print(partie.joueurCourant.afficherCartes())
-
 	// Tant que le joueur courant peut encore deplacer un pion (si avec une carte aucun mouvement n'est possible alors propose l'autre carte du joueur)
 	// Sinon le jouer ne fait aucun mouvement et l'autre joueur prend son tour
 	while(partie.peutJouer(j : partie.joueurCourant)){
@@ -90,6 +95,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 		let pionChoisi : Pion = partie.joueurCourant.choisirPion(indice : indicePion)
 		print("Les mouvements possibles sont :")
 		let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)
+		
 		for i in 0...mouvementsP.count{
 			print(mouvementsP[i])
 		}
