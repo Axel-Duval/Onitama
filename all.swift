@@ -151,7 +151,7 @@ class Joueur : TJoueur {
 		var res = [Pion]()
 		let temp = self.nombrePions()
 		for i in 0..<(self.nombrePions()){
-			if(self.afficherPions()[i] !== p){
+			if(self.afficherPions()[i] != p){
 				res.append(self.afficherPions()[i])
 			}
 		}
@@ -544,7 +544,7 @@ class Position : TPosition{
 	}
 
 	func positionOcc() -> Bool{
-		return (self.pion === nil) 
+		return (self.pion != nil) 
 	}
 
 	func getPion() -> Pion?{
