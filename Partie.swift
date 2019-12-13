@@ -193,17 +193,17 @@ class Partie : TPartie {
 
 	func gagnant() -> Joueur{
 		//Si le joueur 2 a perdu tous ses pions
-		if (j2.nombrePions() == 0){
+		if (self.joueur2.nombrePions() == 0){
 			return self.joueur1
 		}
 		//Si le joueur 1 a perdu tous ses pions
-		else if (j1.nombrePions() == 0){
+		else if (self.joueur1.nombrePions() == 0){
 			return self.joueur2
 		}
 		else{
 			//Si le joueur 2 a perdu son maitre alors joueur 1 gagne sinon c'est l'inverse
 			var winner : Joueur = self.joueur1
-			for elt in j2.afficherPions(){
+			for elt in self.joueur2.afficherPions(){
 				if (elt.estMaitre()){
 					winner = self.joueur2
 				}
