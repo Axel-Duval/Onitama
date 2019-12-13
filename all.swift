@@ -120,11 +120,20 @@ class Joueur : TJoueur {
 		//init de pions avec position absurde (pions pas sur le plateau)
 		let pos : Position = Position(x : -10, y : -10, pion : nil)
 		let p1 : Pion = Pion(j : self, maitre : false, position : pos)
-		let p2 : Pion = Pion(j : self, maitre : true, position : pos)
-		self.listePions = [p1, p1, p2, p1, p1]
+		p1.position.pion = p1
+		let p2 : Pion = Pion(j : self, maitre : false, position : pos)
+		p2.position.pion = p2
+		let p3 : Pion = Pion(j : self, maitre : true, position : pos)
+		p3.position.pion = p3
+		let p4 : Pion = Pion(j : self, maitre : false, position : pos)
+		p4.position.pion = p4
+		let p5 : Pion = Pion(j : self, maitre : false, position : pos)
+		p5.position.pion = p5
+		self.listePions = [p1, p2, p3, p4, p5]
 		//init de fausse cartes pour pouvoir ensuite leur donner une vrai valeur...
 		let c1 : Carte = Carte(nom : "pour init", couleur : couleur, listeMouvements : [pos])
-		self.listeCartes = [c1,c1]
+		let c2 : Carte = Carte(nom : "pour init", couleur : couleur, listeMouvements : [pos])
+		self.listeCartes = [c1,c2]
 	}
 
 	func selectCarte(indice : Int) -> Carte{
@@ -151,7 +160,7 @@ class Joueur : TJoueur {
 		var res = [Pion]()
 		let temp = self.nombrePions()
 		for i in 0..<(self.nombrePions()){
-			if(self.afficherPions()[i] != p){
+			if(self.afficherPions()[i] !== p){
 				res.append(self.afficherPions()[i])
 			}
 		}
@@ -327,10 +336,10 @@ class Partie : TPartie {
 		}
 		//On affecte la bonne position aux pions des 2 joueurs
 		for i in 0...4{
-			self.plateau[0][i].setPion(pion : self.joueur1.listePions[i])
-			self.plateau[4][i].setPion(pion : self.joueur2.listePions[i])
-			self.joueur1.listePions[i].position = self.plateau[0][i]
-			self.joueur2.listePions[i].position = self.plateau[4][i]
+			self.joueur1.listePions[i].position = self.plateau[i][0]
+			self.joueur2.listePions[i].position = self.plateau[i][4]
+			self.plateau[i][0].setPion(pion : self.joueur1.listePions[i])
+			self.plateau[i][4].setPion(pion : self.joueur2.listePions[i])
 		}
 		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
 	}
@@ -372,18 +381,26 @@ class Partie : TPartie {
 	}
 
 	func getPosition(x : Int, y : Int) -> Position {
-		return self.plateau[x][y]
+		return self.plateau[y][x]
 	}
 
 	func estPossible(c : Carte, p : Pion, pos : Position) -> Bool {
-		var new_x : Int = p.position.x + pos.x
-		var new_y : Int = p.position.y + pos.y
+		var new_x : Int
+		var new_y : Int 
+		if (p.joueur === self.joueur2){
+			new_x = p.position.x + pos.x
+			new_y = p.position.y + pos.y
+		}
+		else{
+			new_x = p.position.x - pos.x
+			new_y = p.position.y - pos.y
+		}		
 		if ((new_x >= 0) && (new_x <= 4) && (new_y >= 0) && (new_y <= 4)){
-			if (!self.plateau[new_x][new_y].positionOcc()){
+			if (!self.plateau[new_y][new_x].positionOcc()){
 				return true
 			}
 			else{
-				return self.plateau[new_x][new_y].getPion()!.joueur.couleur != p.joueur.couleur
+				return self.plateau[new_y][new_x].getPion()!.joueur.couleur == p.joueur.couleur
 			}
 		}
 		else{
@@ -395,7 +412,12 @@ class Partie : TPartie {
 		var res : [Position] = []
 		for elt in c.mouvement(){
 			if (estPossible(c : c, p : p, pos : elt)){
-				res.append(elt)
+				if (p.joueur === self.joueur2){
+					res.append(self.plateau[elt.y + p.position.y][elt.x + p.position.x])
+				}
+				else{
+					res.append(self.plateau[p.position.y - elt.y][p.position.x - elt.x])
+				}
 			}
 		}
 		return res
@@ -406,12 +428,12 @@ class Partie : TPartie {
 	}
 
 	func deplacerPion(p : Pion, pos : Position){
-		self.plateau[p.position.x][p.position.y].setPion(pion : nil)//on dit que l'emplacement actuel du pion va devenir vide
+		self.getPosition(x : p.position.y, y : p.position.x).pion = nil//on dit que l'emplacement actuel du pion va devenir vide
 		p.position = pos//on dit que la position du pion est la nouvelle position
 		if (pos.positionOcc()){//Dans le cas ou la position d'arrivee est occupee
 			capturePion(p : pos.getPion()!)
 		}
-		self.plateau[pos.x][pos.y].pion = p//On dit que le nouvel emplacement du pion est occupee
+		self.plateau[pos.y][pos.x].pion = p//On dit que le nouvel emplacement du pion est occupee
 	}
 
 	func capturePion(p : Pion) -> Bool {
@@ -493,7 +515,7 @@ class Pion : TPion {
 	}
 
 	func estMaitre() -> Bool{
-		return self.estMaitre()
+		return self.maitre
 	}
 }
 
@@ -544,7 +566,7 @@ class Position : TPosition{
 	}
 
 	func positionOcc() -> Bool{
-		return (self.pion != nil) 
+		return (self.pion !== nil) 
 	}
 
 	func getPion() -> Pion?{
@@ -579,58 +601,57 @@ func saisirEntier(type : String, borneinf : Int, bornesup : Int) -> Int{
 
 func affichePlateau(partie : Partie){
 	var ligne : String
-	print("0\t1\t2\t3\t4\t5")
+	print("\\\t0\t1\t2\t3\t4\t(x)\n")
 	for l in 0...4{
-		ligne = String(l+1)
+		ligne = String(l) + "\t"
 		for c in 0...4{
 
-			if !partie.getPosition(x : l, y : c).positionOcc(){
+			if !partie.getPosition(x : c, y : l).positionOcc(){
 				ligne = ligne + " \t"
-
 			}
+
 			else{
 				var pionCourant : Pion
-				if let x = partie.getPosition(x : l, y : c).getPion(){
+				if let x = partie.getPosition(x : c, y : l).getPion(){
 					pionCourant = x
 					var forme : String
-					if (partie.joueurCourant.couleur == partie.joueur1.couleur){
+					if (pionCourant.joueur.couleur == partie.joueur1.couleur){
 						// les pions du joueur 1 prend la forme O
-						forme = "O"
+						forme = "B"
 					}
 					else{
 						// les pions du joueur 2 prend la forme X
-						forme = "X"
+						forme = "W"
 					}
 					if(pionCourant.estMaitre()){
 						// les maitres prennent la forme suivante : <X> ou <O>
 						forme = "<" + forme + ">"
 					}
-					ligne = ligne + forme
+					ligne = ligne + forme + "\t"
 				}
 				
 			}
 		}
+		print(ligne + "\n")
 	}
+	print("(y)")
 }
 
-func saisirNom()->String {
-	print("Veuillez entrer votre nom : ")
+func saisirNom(num : Int)->String {
+	print("Veuillez entrer votre nom joueur \(num): ")
 	let input = readLine()
 	if let nom : String = input {
 		return nom
 	}
 	else{
 		print("Nom invalide")
-		return saisirNom()
+		return saisirNom(num : num)
 	}
 }
 
 
-print("Nom du joueur 1")
-var nomjoueur1 : String = saisirNom()
-
-print("Nom du joueur 2")
-var nomjoueur2 : String = saisirNom()
+var nomjoueur1 : String = saisirNom(num : 1)
+var nomjoueur2 : String = saisirNom(num : 2)
 
 var joueur1: Joueur = Joueur(nom : nomjoueur1, couleur : Couleur.Rouge)
 var joueur2: Joueur = Joueur(nom : nomjoueur2, couleur : Couleur.Bleu)
@@ -639,25 +660,22 @@ var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 //Cette variable est pour savoir si le joueur a joue ou non
 var pass : Bool = false
 
-print("C'est parti !")
+print("\n\n\n____________________________C'est parti !__________________________________\n\n")
 
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	var ligne : String = ""
 	//On affiche le plateau
 	affichePlateau(partie : partie)
 	//On affiche les pions du joueur courant
-	print("\nVoici vos pions :")
+	print("\n\(partie.joueurCourant.nom), voici vos pions :")
 	for elt in partie.joueurCourant.afficherPions(){
-		ligne = ligne + "(x : \(elt.position.x) y : \(elt.position.y))\t"
+		ligne = ligne + "(x : \(elt.position.y) y : \(elt.position.x))\t"
 	}
 	print(ligne)
 	//On affiche les cartes du joueur courant
-	print("\nVoici vos cartes :")
-	ligne = ""
-	for elt in partie.joueurCourant.afficherCartes(){
-		ligne = ligne + elt.afficherCarte() + "\t"
-	}
-	print(ligne)
+	print("\n\(partie.joueurCourant.nom), voici vos cartes :")
+	print("1 : \(partie.joueurCourant.afficherCartes()[0].nom)")
+	print("2 : \(partie.joueurCourant.afficherCartes()[1].nom)\n")
 	//On dit que le joueur viens d'avoir la main il n'a donc pas encore pose de pion
 	pass = false
 	//Tant que le joueur peut jouer et qu'il n'a pas poser de pion
@@ -674,20 +692,22 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			pass = true
 			//On affiche les mouvements possibles avec cette carte et ce pion
 			print("Les mouvements possibles sont :")
-			let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)	
+			let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)
+			var i : Int = 1
 			for elt in mouvementsP{
-				print(elt.x)
+				print("Mouvement \(i): x:\(elt.x),y:\(elt.y)")
+				i = i + 1
 			}
 			//On demande au joueur de choisir un mouvement
-			print("Choisissez un mouvement : ")
 			let indiceMouvement : Int = saisirEntier(type : "un numéro de mouvement", borneinf : 1, bornesup : partie.nbMouvementsPossibles(c : carteChoisi, p : pionChoisi))
 			let mouvementChoisi : Position = partie.selectPosition(mouvements : mouvementsP, indice : indiceMouvement)
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
 				//Il capture le pion adverse
-				partie.capturePion(p : mouvementChoisi.getPion()!)
 				print("Vous avez capturé un pion adverse")
+				partie.capturePion(p : mouvementChoisi.getPion()!)
 			}
+			print("Pas de pion adverse capture")
 			//On deplace reelement le pion a son nouvel emplacement
 			partie.deplacerPion(p : pionChoisi, pos : mouvementChoisi)
 			//On echange la carte jouee avec la carte courante
