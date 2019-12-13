@@ -43,7 +43,7 @@ class Carte : TCarte{
 	}
 
 	func afficherCarte() -> String{
-		let res : String = "\(self.nom) (\(self.couleur))"
+		let res : String = self.nom
 		return res
 	}
 }

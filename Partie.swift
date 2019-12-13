@@ -228,12 +228,14 @@ class Partie : TPartie {
 	func estPossible(c : Carte, p : Pion, pos : Position) -> Bool {
 		var new_x : Int = p.position.x + pos.x
 		var new_y : Int = p.position.y + pos.y
+		print(new_x)
+		print(new_y)
 		if ((new_x >= 0) && (new_x <= 4) && (new_y >= 0) && (new_y <= 4)){
 			if (!self.plateau[new_x][new_y].positionOcc()){
 				return true
 			}
 			else{
-				return self.plateau[new_x][new_y].getPion()!.joueur.couleur != p.joueur.couleur
+				return (self.plateau[new_x][new_y].getPion()!.joueur.couleur != p.joueur.couleur)
 			}
 		}
 		else{

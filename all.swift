@@ -43,7 +43,7 @@ class Carte : TCarte{
 	}
 
 	func afficherCarte() -> String{
-		let res : String = "\(self.nom) (\(self.couleur))"
+		let res : String = self.nom
 		return res
 	}
 }
@@ -666,7 +666,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 		let indiceCarte : Int = saisirEntier(type : "un numéro de carte, 1 ou 2", borneinf : 1, bornesup : 2)
 		let carteChoisi : Carte = partie.joueurCourant.selectCarte(indice : indiceCarte)
 		//Il doit choisir un pion
-		let indicePion : Int = saisirEntier(type : "numéro de pion", borneinf : 1, bornesup : partie.joueurCourant.nombrePions())
+		let indicePion : Int = saisirEntier(type : "un numéro de pion", borneinf : 1, bornesup : partie.joueurCourant.nombrePions())
 		let pionChoisi : Pion = partie.joueurCourant.choisirPion(indice : indicePion)
 		//Si il est possible de jouer avec cette carte et ce pion
 		if (partie.nbMouvementsPossibles(c : carteChoisi, p : pionChoisi) > 0){
@@ -674,9 +674,9 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			pass = true
 			//On affiche les mouvements possibles avec cette carte et ce pion
 			print("Les mouvements possibles sont :")
-			let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)			
-			for i in 0...mouvementsP.count{
-				print(mouvementsP[i])
+			let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)	
+			for elt in mouvementsP{
+				print(elt.x)
 			}
 			//On demande au joueur de choisir un mouvement
 			print("Choisissez un mouvement : ")
