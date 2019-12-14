@@ -22,8 +22,11 @@ Pourquoi donner une partie en paramètre de la fonction **changerJoueur(p:Partie
 
 Pourquoi dans la fonction **estPossible( c : Carte, p : Pion, pos : Position) -> Bool** on demande une carte en paramètre alors qu'on n'en a pas besoin pour retourner la bonne valeur de l'assertion ? Le pion et la position suffisent à dire si c'est possible ou non...
 
-Dans la fionction **echangerCarte(l1 : [Carte], c1 : Carte, c2 : Carte)** on demande une liste de cartes en paramètre en plus des deux cartes à échanger alors que ce n'est pas nécessaire. D'après vos spécifications, on utilise cette fonction exclusivement pour échanger la carte sélectionnée par un joueur avec la carte courante du jeu. Comme nous travaillons en programmation orientée objet il n'est pas nécessaire  (et même déconseillé) de passer en paramètre les attributs de la classe sur laquelle nous travaillons, donc pas besoin de donner la carte nécessaire ni la liste de carte du joueur courant. Donc nous avons utilisé votre fonction en ne nous servant que du paramètre ***carte choisie par le joueur courant (c1)*** donc je vous conseille pour la suite de faire attention à ça.
+Dans la fonction **echangerCarte(l1 : [Carte], c1 : Carte, c2 : Carte)** on demande une liste de cartes en paramètre en plus des deux cartes à échanger alors que ce n'est pas nécessaire. D'après vos spécifications, on utilise cette fonction exclusivement pour échanger la carte sélectionnée par un joueur avec la carte courante du jeu. Comme nous travaillons en programmation orientée objet il n'est pas nécessaire  (et même déconseillé) de passer en paramètre les attributs de la classe sur laquelle nous travaillons, donc pas besoin de donner la carte nécessaire ni la liste de carte du joueur courant. Donc nous avons utilisé votre fonction en ne nous servant que du paramètre ***carte choisie par le joueur courant (c1)*** donc je vous conseille pour la suite de faire attention à ça. De plus votre spécification se contredit car ****c1**** et ****c2**** doivent être des indices et non des cartes...
 
+Pourquoi la fonction ***capturePion(p : Pion) -> Bool*** retourne un booléen alors que l'on a pas besoin de type retour. On appelle cette fonction seulement dans ***deplacerPion(p : Pion, pos : Position)*** si la position visée est occupée par un pion adverse. Donc comme dit dans vos préconditions : **Pré: pion existe et n'appartient pas au joueur courant** donc on sait que le pion sera supprimé, pas besoin de retourner un booléen.
+
+Dans votre fonction ***peutJouer(j : Joueur) -> Bool*** vous avez mis en paramètre un joueur, or ce joueur est ****toujours**** le joueur courant donc pas la peine de le mettre en tant que paramètre de la fonction, on peut le retrouver avec **self.joueurCourant**.
 
 ## Pion
 
@@ -44,6 +47,10 @@ Il aurait été préférable de différentier les ***positions*** et les ***mouv
 ## Programme principal
 
 Attention gros problèmes d'***indentation*** dans votre programme principal.
+
+## Conclusion
+
+Nous pensons que dans l'ensemble vous avez réussi à trouver toutes les fonctions nécéssaires à la spécification (même s'il manque des **getteurs** et **setteurs**) cependant nous vous conseillons de revoir les notions : **type référence** et **type valeur**. Il faut aussi revoir la facon d'organiser les liens entre les diverses classes car ils sont parfois superflux, comme par exemple le fait qu'un pion possède une position et un joueur, une position possède un pion donc un joueur et une carte possède également une position donc un pion et un joueur... On s'emmêle vite les pinceaux donc essayer pour la suite de définir vos liens plus rigoureusement, on ne dis pas qu'il ne faut pas faire de double liens mais dans ce cas précis avec **Joueur**,**Pion**,**Position** il y a trop de liens et l'on stocke des informations redondantes.
 
 ## Voir le projet
 

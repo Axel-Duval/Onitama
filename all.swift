@@ -178,23 +178,23 @@ enum Couleur{
 protocol TPartie{
 
 	// joueur1 : Partie -> Joueur
-  // Le 1er joueur de la partie
-  // Post: Retourne le 1er joueur
+ 	// Le 1er joueur de la partie
+ 	// Post: Retourne le 1er joueur
 	var joueur1 : Joueur {get set}
   
-  // joueur2 : Partie -> Joueur
-  // Le 2eme joueur de la partie
-  // Post: Retourne le 2eme joueur
+	// joueur2 : Partie -> Joueur
+	// Le 2eme joueur de la partie
+	// Post: Retourne le 2eme joueur
 	var joueur2 : Joueur {get set}
   
-  // carteCourant : Partie -> Carte
-  // La carte au milleu en jeu
-  // Post: Retourne la carte qui n'appartient à aucun joueur en jeu
+	// carteCourant : Partie -> Carte
+	// La carte au milleu en jeu
+	// Post: Retourne la carte qui n'appartient à aucun joueur en jeu
 	var carteCourante : Carte {get set}
   
-  // joueurCourant : Partie -> Carte
-  // Indique le joueur courant
-  // Post: Retourne le joueur qui fait son tour , joueur1 ou joueur2
+	// joueurCourant : Partie -> Carte
+	// Indique le joueur courant
+	// Post: Retourne le joueur qui fait son tour , joueur1 ou joueur2
 	var joueurCourant : Joueur {get} 
 
 	// init : Joueur x Joueur-> Partie
@@ -230,7 +230,7 @@ protocol TPartie{
 	//Post: retourne un joueur
 	func gagnant() -> Joueur
   
-  // getPosition : Int x Int -> Position 
+	// getPosition : Int x Int -> Position 
 	// retourne la position selon les coordonnées x et y
 	// Pré: !estFinie et position existe
 	// Post: retourne la position, erreur sinon
@@ -247,20 +247,20 @@ protocol TPartie{
 	//mouvementsPossibles: Carte x Pion -> [Position]
 	// Utilise la func estPossible
 	// retourne toutes les positions possible pour un pion selon la carte choisie
-  // Pré: Au moins un mouvement possible (boucle while)
+	// Pré: Au moins un mouvement possible (boucle while)
 	// si aucun mouvement possible, on sort du boucle while, le cas est pris en compte par la fonction peutJouer
-  // Post: Retourne un tableau de positions indiquant les mouvements possible pour la carte et le pion choisi
+	// Post: Retourne un tableau de positions indiquant les mouvements possible pour la carte et le pion choisi
 	func mouvementsPossibles(c : Carte, p : Pion) -> [Position]
 
 	// nbMouvementsPossibles: Carte x Pion -> Int
-  // Utilise la fonction mouvementsPossibles pour indiquer le nombre des mouvements possibles pour une carte et un pion 
-  // Post: si aucun mouvement possible, retourne 0, sinon retourne le nombre de mouvements possibles
+	// Utilise la fonction mouvementsPossibles pour indiquer le nombre des mouvements possibles pour une carte et un pion 
+	// Post: si aucun mouvement possible, retourne 0, sinon retourne le nombre de mouvements possibles
 	func nbMouvementsPossibles(c : Carte, p : Pion) -> Int
 
 	// deplacerPion: Pion x Position 
 	// deplacer un pion sur la grille de jeu
-  // Pré: le déplacement est valide
-  // Post: le pion déplace sur la position, si un pion adverse est présent, il est capturé
+	// Pré: le déplacement est valide
+	// Post: le pion déplace sur la position, si un pion adverse est présent, il est capturé
 	func deplacerPion(p : Pion, pos : Position)
 
 	// capturePion: Pion -> Bool
@@ -275,16 +275,16 @@ protocol TPartie{
 	// l1 la liste des cartes du joueur
 	func echangerCarte( l1 : [Carte], c1 : Carte, c2 : Carte)
 	
-  // peutJouer : Partie x Joueur -> Bool
+	// peutJouer : Partie x Joueur -> Bool
 	// Indique si le joueur peut jouer 
 	// Post : retourne false si aucun mouvement possible pour toutes les cartes et pions du joueur, ou si le joueur a déjà passé son tour, true si il n'a pas encore joué et il lui reste des mouvements possibles
 	func peutJouer(j : Joueur) -> Bool
   
- // selectPosiion: [Position] x Int -> Postion
+	// selectPosiion: [Position] x Int -> Postion
 	// Le joueur curant selectionne une carte
 	// Ind est l'indice de la position choisie dans la liste des mouvements possibles du joueur courant
-  // Pré: La position choisie doit être dans la liste de mouvements posibles du joueur
-  // Post: Retourne la position choisie
+	// Pré: La position choisie doit être dans la liste de mouvements posibles du joueur
+	// Post: Retourne la position choisie
 	func selectPosition(mouvements : [Position], indice : Int) -> Position
 }
 
@@ -293,7 +293,6 @@ class Partie : TPartie {
 	var joueur2 : Joueur
 	var carteCourante : Carte
 	var joueurCourant : Joueur
-	var estFinie : Bool
 	var plateau : [[Position]]
 
 	required init(j1 : Joueur, j2 : Joueur){
@@ -316,13 +315,24 @@ class Partie : TPartie {
 		let double_diago_avant_droite : Position = Position(x : -1, y : 2, pion : nil)
 		let double_diago_avant_gauche : Position = Position(x : -1, y : -2, pion : nil)
 		//On creer les cartes
-		let hahn : Carte = Carte(nom : "hahn", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
-		let krabbe : Carte = Carte(nom : "krabbe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
-		let wild : Carte = Carte(nom : "wild-schwein", couleur : Couleur.Rouge, listeMouvements : [avant,droite,gauche])
-		let drache : Carte = Carte(nom : "drache", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_arriere_droite,double_diago_avant_gauche,double_diago_avant_gauche])
-		let affe : Carte = Carte(nom : "affe", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_gauche,diago_avant_droite,diago_arriere_droite])
+		let coq : Carte = Carte(nom : "coq", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
+		let crabe : Carte = Carte(nom : "crabe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
+		let porc : Carte = Carte(nom : "porc", couleur : Couleur.Rouge, listeMouvements : [avant,droite,gauche])
+		let dragon : Carte = Carte(nom : "dragon", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_arriere_droite,double_diago_avant_gauche,double_diago_avant_gauche])
+		let singe : Carte = Carte(nom : "singe", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_gauche,diago_avant_droite,diago_arriere_droite])
+		let tigre : Carte = Carte(nom : "tigre", couleur : Couleur.Rouge, listeMouvements : [arriere, double_avant])
+		let grenouille : Carte = Carte(nom : "grenouille", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_droite,double_gauche])
+		let lapin : Carte = Carte(nom : "lapin", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_avant_droite,double_droite])
+		let elephant : Carte = Carte(nom : "elephant", couleur : Couleur.Rouge, listeMouvements : [gauche,droite,diago_avant_droite,diago_avant_gauche])
+		let oie : Carte = Carte(nom : "oie", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_avant_gauche,droite,diago_arriere_droite])
+		let cheval : Carte = Carte(nom : "cheval", couleur : Couleur.Rouge, listeMouvements : [gauche,avant,arriere])
+		let bison : Carte = Carte(nom : "bison", couleur : Couleur.Rouge, listeMouvements : [droite,avant,arriere])
+		let sanglier : Carte = Carte(nom : "sanglier", couleur : Couleur.Rouge, listeMouvements : [gauche,droite,avant])
+		let mante : Carte = Carte(nom : "mante", couleur : Couleur.Rouge, listeMouvements : [arriere,diago_avant_gauche,diago_avant_droite])
+		let anguille : Carte = Carte(nom : "anguille", couleur : Couleur.Rouge, listeMouvements : [droite,diago_avant_gauche,diago_arriere_gauche])
+		let cobra : Carte = Carte(nom : "cobra", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_arriere_droite,diago_avant_droite])
 		//On affecte les cartes aux joueurs
-		var all_cards : [Carte] = [hahn,krabbe,wild,drache,affe]
+		var all_cards : [Carte] = [cobra,oie,coq,mante,crabe,porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille]
 		var cards : [Carte] = all_cards.shuffled()
 		self.joueur1.listeCartes = [cards[0],cards[1]]
 		self.joueur2.listeCartes = [cards[2],cards[3]]
@@ -386,7 +396,7 @@ class Partie : TPartie {
 
 	func estPossible(c : Carte, p : Pion, pos : Position) -> Bool {
 		var new_x : Int
-		var new_y : Int 
+		var new_y : Int
 		if (p.joueur === self.joueur2){
 			new_x = p.position.x + pos.x
 			new_y = p.position.y + pos.y
@@ -428,22 +438,24 @@ class Partie : TPartie {
 	}
 
 	func deplacerPion(p : Pion, pos : Position){
-		self.getPosition(x : p.position.y, y : p.position.x).pion = nil//on dit que l'emplacement actuel du pion va devenir vide
-		p.position = pos//on dit que la position du pion est la nouvelle position
-		if (pos.positionOcc()){//Dans le cas ou la position d'arrivee est occupee
-			capturePion(p : pos.getPion()!)
+		if (self.getPosition(x : pos.x, y : pos.y).positionOcc()){//Il y a un pion sur la position visee
+			capturePion(p : self.getPosition(x : pos.x, y : pos.y).pion)//On capture ce pion, c'est a dire qu'on le supprime du deck de l'autre joueur
 		}
-		self.plateau[pos.y][pos.x].pion = p//On dit que le nouvel emplacement du pion est occupee
+		self.getPosition(x : pos.x, y : pos.y).pion = p//On dis que le pion sur la position visee est desormais le pion passe en parametre
+		self.getPosition(x : p.position.x, y : p.position.y).pion = nil//On dit que l'ancien emplacement du pion deviens vide
+		self.getPosition(x : pos.x, y : pos.y).pion.position = self.getPosition(x : pos.x, y : pos.y)//On dit que l'emplacement du pion devient l'emplacement vise
 	}
 
+
 	func capturePion(p : Pion) -> Bool {
+		//On doit supprimer le pion du deck de l'autre joueur
 		changerJoueur()//on change de joueur courant
 		if (self.joueurCourant.supprimerPion(p : p)){
 			self.joueurCourant.supprimerPion(p : p)//On supprime le pion du deck du joueur
 			changerJoueur()//on change de joueur courant
 			return true
 		}
-		else {
+		else {//On ne peut pas supprimer ou il y a eu un probleme...
 			changerJoueur()
 			return false
 		}
@@ -659,8 +671,13 @@ var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 
 //Cette variable est pour savoir si le joueur a joue ou non
 var pass : Bool = false
+temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
+onitama = "\n\n\n                _____       _ _\n               |  _  |     (_) |\n               | | | |_ __  _| |_ __ _ _ __ ___   __ _\n               | | | | '_ \\| | __/ _` | '_ ` _ \\ / _` |\n               \\ \\_/ / | | | | || (_| | | | | | | (_| |\n                \\___/|_| |_|_|\\__\\__,_|_| |_| |_|\\__,_|\n"
+parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
+print(onitama)
+print(temple)
+print(parch)
 
-print("\n\n\n____________________________C'est parti !__________________________________\n\n")
 
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	var ligne : String = ""
@@ -704,7 +721,8 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
 				//Il capture le pion adverse
-				print("Vous avez capturé un pion adverse")
+				sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse eliminé\n\n"
+				print(sword)
 				partie.capturePion(p : mouvementChoisi.getPion()!)
 			}
 			print("Pas de pion adverse capture")
