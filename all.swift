@@ -293,6 +293,7 @@ class Partie : TPartie {
 	var joueur2 : Joueur
 	var carteCourante : Carte
 	var joueurCourant : Joueur
+	private var estFinie : Bool
 	var plateau : [[Position]]
 
 	required init(j1 : Joueur, j2 : Joueur){
@@ -355,7 +356,25 @@ class Partie : TPartie {
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
-		return false
+		//J1 ou j2 n'as plus de pions
+		if(j1.nombrePions() == 0) || (j2.nombrePions() == 0){
+			return true
+		}
+		else{
+			//On regarde si les deux joueurs possedent encore leurs maitres
+			var finie : Bool = false
+			for elt in j1.afficherPions(){
+				if (elt.estMaitre()){
+					finie = true
+				}
+			}
+			for elt in j2.afficherPions(){
+				if (elt.estMaitre()){
+					finie = true
+				}
+			}
+			return finie
+		}
 	}
 
 	//func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
