@@ -334,7 +334,8 @@ class Partie : TPartie {
 		let cobra : Carte = Carte(nom : "cobra", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_arriere_droite,diago_avant_droite])
 		//On affecte les cartes aux joueurs
 		var all_cards : [Carte] = [cobra,oie,coq,mante,crabe,porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille]
-		var cards : [Carte] = all_cards.shuffled()
+		 var cards : [Carte] = all_cards.shuffled() 
+		var cards : [Carte] = all_cards
 		self.joueur1.listeCartes = [cards[0],cards[1]]
 		self.joueur2.listeCartes = [cards[2],cards[3]]
 		self.carteCourante = cards[4]
@@ -352,25 +353,32 @@ class Partie : TPartie {
 			self.plateau[i][0].setPion(pion : self.joueur1.listePions[i])
 			self.plateau[i][4].setPion(pion : self.joueur2.listePions[i])
 		}
-		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
+		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()! 
+		self.joueurCourant = self.joueur1
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
 		//J1 ou j2 n'as plus de pions
 		if(j1.nombrePions() == 0) || (j2.nombrePions() == 0){
-			return true
+			return false
 		}
 		else{
 			//On regarde si les deux joueurs possedent encore leurs maitres
-			var finie : Bool = false
+			var finie : Bool = true
 			for elt in j1.afficherPions(){
 				if (elt.estMaitre()){
-					finie = true
+					finie = false
+					if elt.position.x == 2 && elt.position.y == 4{
+						finie = true
+					}
 				}
 			}
 			for elt in j2.afficherPions(){
 				if (elt.estMaitre()){
-					finie = true
+					finie = false
+					if elt.position.x == 2 && elt.position.y == 0{
+						finie = true
+					}
 				}
 			}
 			return finie
@@ -389,14 +397,28 @@ class Partie : TPartie {
 			return self.joueur2
 		}
 		else{
-			//Si le joueur 2 a perdu son maitre alors joueur 1 gagne sinon c'est l'inverse
-			var winner : Joueur = self.joueur1
-			for elt in self.joueur2.afficherPions(){
+			//On regarde si les deux joueurs possedent encore leurs maitres
+			var finie : Bool = true
+			for elt in self.joueur1.afficherPions(){
 				if (elt.estMaitre()){
-					winner = self.joueur2
+					finie = false
+					if elt.position.x == 2 && elt.position.y == 4{
+						return self.joueur1
+					}
 				}
 			}
-			return winner
+			for elt in self.joueur2.afficherPions(){
+				if (elt.estMaitre()){
+					if elt.position.x == 2 && elt.position.y == 0{
+						return self.joueur2
+					}
+				}
+			}
+			if finie{
+				return self.joueur2
+			}else{
+				return self.joueur1
+			}
 		}
 	}
 
@@ -425,11 +447,11 @@ class Partie : TPartie {
 			new_y = p.position.y - pos.y
 		}		
 		if ((new_x >= 0) && (new_x <= 4) && (new_y >= 0) && (new_y <= 4)){
-			if (!self.plateau[new_y][new_x].positionOcc()){
+			if (!self.getPosition(x : new_x, y : new_y).positionOcc()){
 				return true
 			}
 			else{
-				return self.plateau[new_y][new_x].getPion()!.joueur.couleur == p.joueur.couleur
+				return self.getPosition(x : new_x, y : new_y).getPion()!.joueur.couleur != p.joueur.couleur
 			}
 		}
 		else{
@@ -457,12 +479,26 @@ class Partie : TPartie {
 	}
 
 	func deplacerPion(p : Pion, pos : Position){
-		if (self.getPosition(x : pos.x, y : pos.y).positionOcc()){//Il y a un pion sur la position visee
-			capturePion(p : self.getPosition(x : pos.x, y : pos.y).pion)//On capture ce pion, c'est a dire qu'on le supprime du deck de l'autre joueur
+		if (self.getPosition(x : pos.x, y : pos.y).positionOcc() ){//Il y a un pion sur la position visee
+			if (self.getPosition(x : pos.x, y : pos.y).pion!.joueur.couleur != p.joueur.couleur){
+				capturePion(p : self.getPosition(x : pos.x, y : pos.y).pion!)//On capture ce pion, c'est a dire qu'on le supprime du deck de l'autre joueur
+		
+			}
+		}
+		for i in plateau{
+			for j in i{
+				if j.positionOcc(){
+					if j.pion === p{
+						j.pion = nil
+					}
+				}
+					
+			}
+			
 		}
 		self.getPosition(x : pos.x, y : pos.y).pion = p//On dis que le pion sur la position visee est desormais le pion passe en parametre
-		self.getPosition(x : p.position.x, y : p.position.y).pion = nil//On dit que l'ancien emplacement du pion deviens vide
-		self.getPosition(x : pos.x, y : pos.y).pion.position = self.getPosition(x : pos.x, y : pos.y)//On dit que l'emplacement du pion devient l'emplacement vise
+		self.getPosition(x : pos.x, y : pos.y).pion!.position = self.getPosition(x : pos.x, y : pos.y)//On dit que l'emplacement du pion devient l'emplacement vise
+
 	}
 
 
@@ -690,14 +726,14 @@ var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 
 //Cette variable est pour savoir si le joueur a joue ou non
 var pass : Bool = false
-temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
-onitama = "\n\n\n                _____       _ _\n               |  _  |     (_) |\n               | | | |_ __  _| |_ __ _ _ __ ___   __ _\n               | | | | '_ \\| | __/ _` | '_ ` _ \\ / _` |\n               \\ \\_/ / | | | | || (_| | | | | | | (_| |\n                \\___/|_| |_|_|\\__\\__,_|_| |_| |_|\\__,_|\n"
-parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
+/*var temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
+var onitama = "\n\n\n                _____       _ _\n               |  _  |     (_) |\n               | | | |_ __  _| |_ __ _ _ __ ___   __ _\n               | | | | '_ \\| | __/ _` | '_ ` _ \\ / _` |\n               \\ \\_/ / | | | | || (_| | | | | | | (_| |\n                \\___/|_| |_|_|\\__\\__,_|_| |_| |_|\\__,_|\n"
+var parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
 print(onitama)
 print(temple)
 print(parch)
 
-
+ */
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	var ligne : String = ""
 	//On affiche le plateau
@@ -740,8 +776,8 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
 				//Il capture le pion adverse
-				sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse eliminé\n\n"
-				print(sword)
+				/*var sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse eliminé\n\n"
+				print(sword) */
 				partie.capturePion(p : mouvementChoisi.getPion()!)
 			}
 			print("Pas de pion adverse capture")
