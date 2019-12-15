@@ -320,7 +320,7 @@ class Partie : TPartie {
 		let coq : Carte = Carte(nom : "coq", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
 		let crabe : Carte = Carte(nom : "crabe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
 		let porc : Carte = Carte(nom : "porc", couleur : Couleur.Rouge, listeMouvements : [avant,droite,gauche])
-		let dragon : Carte = Carte(nom : "dragon", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_arriere_droite,double_diago_avant_gauche,double_diago_avant_gauche])
+		let dragon : Carte = Carte(nom : "dragon", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_arriere_droite,double_diago_avant_gauche,double_diago_avant_droite])
 		let singe : Carte = Carte(nom : "singe", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_gauche,diago_avant_droite,diago_arriere_droite])
 		let tigre : Carte = Carte(nom : "tigre", couleur : Couleur.Rouge, listeMouvements : [arriere, double_avant])
 		let grenouille : Carte = Carte(nom : "grenouille", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_droite,double_gauche])
@@ -334,7 +334,7 @@ class Partie : TPartie {
 		let anguille : Carte = Carte(nom : "anguille", couleur : Couleur.Rouge, listeMouvements : [droite,diago_avant_gauche,diago_arriere_gauche])
 		let cobra : Carte = Carte(nom : "cobra", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_arriere_droite,diago_avant_droite])
 		//On affecte les cartes aux joueurs
-		var all_cards : [Carte] = [cobra,oie,coq,mante,crabe,porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille]
+		var all_cards : [Carte] = [porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille,cobra,oie,coq,mante,crabe]
 		var cards : [Carte] = all_cards//.shuffled()
 		self.joueur1.listeCartes = [cards[0],cards[1]]
 		self.joueur2.listeCartes = [cards[2],cards[3]]
@@ -450,10 +450,10 @@ class Partie : TPartie {
 		for elt in c.mouvement(){
 			if (estPossible(c : c, p : p, pos : elt)){
 				if (p.joueur === self.joueur2){
-					res.append(self.plateau[elt.y + p.position.y][elt.x + p.position.x])
+					res.append(self.getPosition(x : elt.x + p.position.x, y : elt.y + p.position.y))
 				}
 				else{
-					res.append(self.plateau[p.position.y - elt.y][p.position.x - elt.x])
+					res.append(self.getPosition(x : p.position.x - elt.x, y : p.position.y - elt.y))
 				}
 			}
 		}
