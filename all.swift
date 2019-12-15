@@ -1,3 +1,4 @@
+//attention ligne 337,356
 protocol TCarte{
 	
 	//Nom de la carte
@@ -334,8 +335,7 @@ class Partie : TPartie {
 		let cobra : Carte = Carte(nom : "cobra", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_arriere_droite,diago_avant_droite])
 		//On affecte les cartes aux joueurs
 		var all_cards : [Carte] = [cobra,oie,coq,mante,crabe,porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille]
-		 var cards : [Carte] = all_cards.shuffled() 
-		var cards : [Carte] = all_cards
+		var cards : [Carte] = all_cards//.shuffled()
 		self.joueur1.listeCartes = [cards[0],cards[1]]
 		self.joueur2.listeCartes = [cards[2],cards[3]]
 		self.carteCourante = cards[4]
@@ -353,7 +353,8 @@ class Partie : TPartie {
 			self.plateau[i][0].setPion(pion : self.joueur1.listePions[i])
 			self.plateau[i][4].setPion(pion : self.joueur2.listePions[i])
 		}
-		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
+		//self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
+		self.joueurCourant = self.joueur1
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
@@ -367,7 +368,7 @@ class Partie : TPartie {
 			for elt in j1.afficherPions(){
 				if (elt.estMaitre()){
 					nbMaitre = nbMaitre + 1
-					if ((elt.position.x == 2) && elt.position.y == 4)){
+					if ((elt.position.x == 4) && (elt.position.y == 2)){
 						return true
 					}
 				}
@@ -375,7 +376,7 @@ class Partie : TPartie {
 			for elt in j2.afficherPions(){
 				if (elt.estMaitre()){
 					nbMaitre = nbMaitre + 1
-					if ((elt.position.x == 2) && (elt.position.y == 0)){
+					if ((elt.position.x == 0) && (elt.position.y == 2)){
 						return true
 					}
 				}
@@ -398,7 +399,7 @@ class Partie : TPartie {
 			//On regarde si le joueur 1 possede encore son maitre
 			for elt in self.joueur1.afficherPions(){
 				if (elt.estMaitre()){
-					if ((elt.position.x == 2) && elt.position.y == 4)){
+					if ((elt.position.x == 2) && (elt.position.y == 4)){
 						return self.joueur1
 					}
 				}
@@ -635,7 +636,7 @@ class Position : TPosition{
 }
 
 func saisirEntier(type : String, borneinf : Int, bornesup : Int) -> Int{
-	print("Veuillez choisir " + type + " : ")
+	print(">> Veuillez choisir " + type + " : ")
 	guard let input = readLine() else{
 		return saisirEntier(type : type, borneinf : borneinf, bornesup : bornesup)
 	}
@@ -645,21 +646,21 @@ func saisirEntier(type : String, borneinf : Int, bornesup : Int) -> Int{
 			return result
 		}
 		else{
-			print("Veuillez saisir un entier entre \(borneinf) et \(bornesup)")
+			print(">> Veuillez saisir un entier entre \(borneinf) et \(bornesup)")
 			return saisirEntier(type : type, borneinf : borneinf, bornesup : bornesup)
 		}
 	}
 	else{
-		print("L'entier saisi n'est pas valide !")
+		print("<Oops> L'entier saisi n'est pas valide ! <Oops>")
 		return saisirEntier(type : type, borneinf : borneinf, bornesup : bornesup)
 	}
 }
 
 func affichePlateau(partie : Partie){
 	var ligne : String
-	print("\\\t0\t1\t2\t3\t4\t(x)\n")
+	print("\t       \\\t0\t1\t2\t3\t4\t(x)\n")
 	for l in 0...4{
-		ligne = String(l) + "\t"
+		ligne = "\t       " + String(l) + "\t"
 		for c in 0...4{
 
 			if !partie.getPosition(x : c, y : l).positionOcc(){
@@ -673,15 +674,15 @@ func affichePlateau(partie : Partie){
 					var forme : String
 					if (pionCourant.joueur.couleur == partie.joueur1.couleur){
 						// les pions du joueur 1 prend la forme O
-						forme = "B"
+						forme = "R"
 					}
 					else{
 						// les pions du joueur 2 prend la forme X
-						forme = "W"
+						forme = "B"
 					}
 					if(pionCourant.estMaitre()){
 						// les maitres prennent la forme suivante : <X> ou <O>
-						forme = "<" + forme + ">"
+						forme = "~" + forme + "~"
 					}
 					ligne = ligne + forme + "\t"
 				}
@@ -690,17 +691,17 @@ func affichePlateau(partie : Partie){
 		}
 		print(ligne + "\n")
 	}
-	print("(y)")
+	print("\t      (y)\n\n")
 }
 
 func saisirNom(num : Int)->String {
-	print("Veuillez entrer votre nom joueur \(num): ")
+	print(">> Veuillez entrer votre nom joueur \(num): ")
 	let input = readLine()
 	if let nom : String = input {
 		return nom
 	}
 	else{
-		print("Nom invalide")
+		print("<Oops> Nom invalide <Oops>")
 		return saisirNom(num : num)
 	}
 }
@@ -717,49 +718,60 @@ var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 var pass : Bool = false
 var temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
 var onitama = "\n\n\n                _____       _ _\n               |  _  |     (_) |\n               | | | |_ __  _| |_ __ _ _ __ ___   __ _\n               | | | | '_ \\| | __/ _` | '_ ` _ \\ / _` |\n               \\ \\_/ / | | | | || (_| | | | | | | (_| |\n                \\___/|_| |_|_|\\__\\__,_|_| |_| |_|\\__,_|\n"
-var parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
+var parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/\n\n"
+let space = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 print(onitama)
 print(temple)
+print("/\\ Vous venez de recevoir un parchemin, pressez sur une touche pour le lire /\\ \n")
+var enter = readLine()//Pour n'afficher le reste que si le joueur reagit
 print(parch)
+print("               Pressez une touche pour commencer le combat...\n")
+enter = readLine()//Pour n'afficher le reste que si le joueur reagit
+print(space)
 
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
-	var ligne : String = ""
 	//On affiche le plateau
+	print(space)
+	print(onitama)
+	print(temple)
 	affichePlateau(partie : partie)
 	//On affiche les pions du joueur courant
-	print("\n\(partie.joueurCourant.nom), voici vos pions :")
+	var ligne : String = "\n>> \(partie.joueurCourant.nom), voici vos pions :\t\t"
+	var i : Int = 1
 	for elt in partie.joueurCourant.afficherPions(){
-		ligne = ligne + "(x : \(elt.position.y) y : \(elt.position.x))\t"
+		ligne = ligne + "\(i).(x : \(elt.position.y) , y : \(elt.position.x))\t\t"
+		i = i + 1
 	}
 	print(ligne)
 	//On affiche les cartes du joueur courant
-	print("\n\(partie.joueurCourant.nom), voici vos cartes :")
-	print("1 : \(partie.joueurCourant.afficherCartes()[0].nom)")
-	print("2 : \(partie.joueurCourant.afficherCartes()[1].nom)\n")
+	print(">>\n>> et voici vos cartes :\t1.<\(partie.joueurCourant.afficherCartes()[0].nom)>\t\t2.<\(partie.joueurCourant.afficherCartes()[1].nom)>\n>>")
+	//On afiche aussi la carte courante
+	print(">> voici la carte courante :\t<\(partie.carteCourante.afficherCarte())>\n>>")
 	//On dit que le joueur viens d'avoir la main il n'a donc pas encore pose de pion
 	pass = false
 	//Tant que le joueur peut jouer et qu'il n'a pas poser de pion
 	while(partie.peutJouer(j : partie.joueurCourant)) && (pass == false){
 		//Il doit choisir une carte
-		let indiceCarte : Int = saisirEntier(type : "un numéro de carte, 1 ou 2", borneinf : 1, bornesup : 2)
+		let indiceCarte : Int = saisirEntier(type : "une carte", borneinf : 1, bornesup : 2)
 		let carteChoisi : Carte = partie.joueurCourant.selectCarte(indice : indiceCarte)
 		//Il doit choisir un pion
-		let indicePion : Int = saisirEntier(type : "un numéro de pion", borneinf : 1, bornesup : partie.joueurCourant.nombrePions())
+		let indicePion : Int = saisirEntier(type : "un pion", borneinf : 1, bornesup : partie.joueurCourant.nombrePions())
 		let pionChoisi : Pion = partie.joueurCourant.choisirPion(indice : indicePion)
 		//Si il est possible de jouer avec cette carte et ce pion
 		if (partie.nbMouvementsPossibles(c : carteChoisi, p : pionChoisi) > 0){
 			//Il va pouvoir jouer donc on doit sortir de la boucle
 			pass = true
 			//On affiche les mouvements possibles avec cette carte et ce pion
-			print("Les mouvements possibles sont :")
+			ligne = ">> Vous pouvez bouger ce pion en :\t\t"
 			let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)
 			var i : Int = 1
 			for elt in mouvementsP{
-				print("Mouvement \(i): x:\(elt.x),y:\(elt.y)")
+				ligne = ligne + "\(i).(x : \(elt.x) , y : \(elt.y))\t\t"
 				i = i + 1
 			}
+			print(ligne + "\n>>")
 			//On demande au joueur de choisir un mouvement
-			let indiceMouvement : Int = saisirEntier(type : "un numéro de mouvement", borneinf : 1, bornesup : partie.nbMouvementsPossibles(c : carteChoisi, p : pionChoisi))
+			let indiceMouvement : Int = saisirEntier(type : "le numéro de la nouvelle position", borneinf : 1, bornesup : partie.nbMouvementsPossibles(c : carteChoisi, p : pionChoisi))
 			let mouvementChoisi : Position = partie.selectPosition(mouvements : mouvementsP, indice : indiceMouvement)
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
@@ -785,14 +797,15 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 
 var nom : String
 if (partie.gagnant().couleur == partie.joueur1.couleur) {
-	nom = partie.joueur1.nom + "." + String(repeating : " ", count : (19 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
+	nom = partie.joueur1.nom + "." + String(repeating : " ", count : (20 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 else {
-	nom = partie.joueur2.nom + "." + String(repeating : " ", count : (19 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
+	nom = partie.joueur2.nom + "." + String(repeating : " ", count : (20 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 
 let bravo = "\n\n  ____                                                 _        _\n |  _ \\                                               | |      //\n | |_) |_ __ __ ___   _____    ___  ___ __ _ _ __ __ _| |__   ___\n |  _ <| '__/ _` \\ \\ / / _ \\  / __|/ __/ _` | '__/ _` | '_ \\ / _ \\\n | |_) | | | (_| |\\ V / (_) | \\__ \\ (_| (_| | | | (_| | |_) |  __/\n |____/|_|  \\__,_| \\_/ \\___/  |___/\\___\\__,_|_|  \\__,_|_.__/ \\___|\n\n"
-var fin = "\n                    ______________________________\n                  / \\                             \\\n                 |   |     Bravo jeune scarabé    |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Je n'ai jamais douté de ta |\n                     | force \(nom)|\n                     |                            |\n                     | Je ne suis pas surpris que |\n                     | tu ais vaincu ces minables |\n                     | apprentis mal entrainés.   |\n                     |                            |\n                     | Reviens me voir quand tu   |\n                     | sera prêt à relever un     |\n                     | autre défis. Encore bravo  |\n                     | et bon repos.              |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
+var fin = "\n                    ______________________________\n                  / \\                             \\\n                 |   |     Bravo jeune scarabé    |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Je n'ai jamais douté de ta |\n                     | force \(nom)|\n                     |                            |\n                     | Je ne suis pas surpris que |\n                     | tu ais vaincu ces minables |\n                     | apprentis mal entrainés.   |\n                     |                            |\n                     | Reviens me voir quand tu   |\n                     | sera prêt à relever un     |\n                     | autre défis. Encore bravo  |\n                     | et bon repos.              |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/\n\n\n"
+print(space)
 print(bravo)
 print(fin) 
 
