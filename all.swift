@@ -785,10 +785,10 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 
 var nom : String
 if (partie.gagnant().couleur == partie.joueur1.couleur) {
-	nom = self.joueur1.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))//formater correctement le nom pour le print final
+	nom = partie.joueur1.nom + "." + String(repeating : " ", count : (19 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 else {
-	nom = self.joueur2.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))//formater correctement le nom pour le print final
+	nom = partie.joueur2.nom + "." + String(repeating : " ", count : (19 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 
 let bravo = "\n\n  ____                                                 _        _\n |  _ \\                                               | |      //\n | |_) |_ __ __ ___   _____    ___  ___ __ _ _ __ __ _| |__   ___\n |  _ <| '__/ _` \\ \\ / / _ \\  / __|/ __/ _` | '__/ _` | '_ \\ / _ \\\n | |_) | | | (_| |\\ V / (_) | \\__ \\ (_| (_| | | | (_| | |_) |  __/\n |____/|_|  \\__,_| \\_/ \\___/  |___/\\___\\__,_|_|  \\__,_|_.__/ \\___|\n\n"
