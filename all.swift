@@ -784,9 +784,16 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	partie.changerJoueur()
 }
 
+var nom : String
 if (partie.gagnant().couleur == partie.joueur1.couleur) {
-	print("Le joueur 1 a gagné")
+	nom = self.joueur1.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))
 }
 else {
-	print("Le joueur 2 a gagné")
+	nom = self.joueur2.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))
 }
+
+let bravo = "\n\n  ____                                                 _        _\n |  _ \\                                               | |      //\n | |_) |_ __ __ ___   _____    ___  ___ __ _ _ __ __ _| |__   ___\n |  _ <| '__/ _` \\ \\ / / _ \\  / __|/ __/ _` | '__/ _` | '_ \\ / _ \\\n | |_) | | | (_| |\\ V / (_) | \\__ \\ (_| (_| | | | (_| | |_) |  __/\n |____/|_|  \\__,_| \\_/ \\___/  |___/\\___\\__,_|_|  \\__,_|_.__/ \\___|\n\n"
+var fin = "\n                    ______________________________\n                  / \\                             \\\n                 |   |     Bravo jeune scarabé    |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Je n'ai jamais douté de ta |\n                     | force \(nom)|\n                     |                            |\n                     | Je ne suis pas surpris que |\n                     | tu ais vaincu ces minables |\n                     | apprentis mal entrainés.   |\n                     |                            |\n                     | Reviens me voir quand tu   |\n                     | sera prêt à relever un     |\n                     | autre défis. Encore bravo  |\n                     | et bon repos.              |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
+print(bravo)
+print(fin) 
+
