@@ -752,7 +752,12 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			let mouvementsP : [Position] = partie.mouvementsPossibles(c : carteChoisi, p : pionChoisi)
 			var i : Int = 1
 			for elt in mouvementsP{
-				ligne = ligne + "\(i).(x : \(elt.x) , y : \(elt.y))\t\t"
+				if (elt.positionOcc()){
+					ligne = ligne + "~ \(i).(x : \(elt.x) , y : \(elt.y)) ~\t\t"
+				}
+				else{
+					ligne = ligne + "\(i).(x : \(elt.x) , y : \(elt.y))\t\t"
+				}
 				i = i + 1
 			}
 			print(ligne + "\n>>")
