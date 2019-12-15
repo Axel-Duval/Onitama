@@ -343,18 +343,18 @@ class Partie : TPartie {
 		self.plateau = [[Position]](repeating : [Position](repeating : Position(x : 0, y : 0, pion : nil), count : 5), count : 5)
 		for l in 0...4{
 			for c in 0...4{
-				self.plateau[l][c] = Position(x : l, y : c, pion : nil)
+				self.plateau[l][c] = Position(x : c, y : l, pion : nil)
 			}
-		}
-		//On affecte la bonne position aux pions des 2 joueurs
-		for i in 0...4{
-			self.joueur1.listePions[i].position = self.plateau[i][0]
-			self.joueur2.listePions[i].position = self.plateau[i][4]
-			self.plateau[i][0].setPion(pion : self.joueur1.listePions[i])
-			self.plateau[i][4].setPion(pion : self.joueur2.listePions[i])
 		}
 		//self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
 		self.joueurCourant = self.joueur1
+		//On affecte la bonne position aux pions des 2 joueurs
+		for i in 0...4{
+			self.joueur1.listePions[i].position = self.getPosition(x : 0, y : i)
+			self.joueur2.listePions[i].position = self.getPosition(x : 4, y : i)
+			self.getPosition(x : 0, y : i).setPion(pion : self.joueur1.listePions[i])
+			self.getPosition(x : 4, y : i).setPion(pion : self.joueur2.listePions[i])
+		}
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
@@ -465,6 +465,7 @@ class Partie : TPartie {
 	}
 
 	func deplacerPion(p : Pion, pos : Position){
+		self.getPosition(x : p.position.x, y : p.position.y).pion = nil
 		if (self.getPosition(x : pos.x, y : pos.y).positionOcc() ){
 			//Il y a un pion sur la position visee
 			if (self.getPosition(x : pos.x, y : pos.y).pion!.joueur.couleur != p.joueur.couleur){
@@ -472,17 +473,6 @@ class Partie : TPartie {
 				capturePion(p : self.getPosition(x : pos.x, y : pos.y).pion!)
 		
 			}
-		}
-		for i in plateau{
-			for j in i{
-				if j.positionOcc(){
-					if j.pion === p{
-						j.pion = nil
-					}
-				}
-					
-			}
-			
 		}
 		//On dis que le pion sur la position visee est desormais le pion passe en parametre
 		self.getPosition(x : pos.x, y : pos.y).pion = p
@@ -668,25 +658,21 @@ func affichePlateau(partie : Partie){
 			}
 
 			else{
-				var pionCourant : Pion
-				if let x = partie.getPosition(x : c, y : l).getPion(){
-					pionCourant = x
-					var forme : String
-					if (pionCourant.joueur.couleur == partie.joueur1.couleur){
-						// les pions du joueur 1 prend la forme O
-						forme = "R"
-					}
-					else{
-						// les pions du joueur 2 prend la forme X
-						forme = "B"
-					}
-					if(pionCourant.estMaitre()){
-						// les maitres prennent la forme suivante : <X> ou <O>
-						forme = "~" + forme + "~"
-					}
-					ligne = ligne + forme + "\t"
+				var pionCourant : Pion = partie.getPosition(x : c, y : l).getPion()!
+				var forme : String
+				if (pionCourant.joueur.couleur == partie.joueur1.couleur){
+					// les pions du joueur 1 prend la forme O
+					forme = "R"
 				}
-				
+				else{
+					// les pions du joueur 2 prend la forme X
+					forme = "B"
+				}
+				if(pionCourant.estMaitre()){
+					// les maitres prennent la forme suivante : <X> ou <O>
+					forme = "~" + forme + "~"
+				}
+				ligne = ligne + forme + "\t"				
 			}
 		}
 		print(ligne + "\n")
@@ -739,7 +725,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	var ligne : String = "\n>> \(partie.joueurCourant.nom), voici vos pions :\t\t"
 	var i : Int = 1
 	for elt in partie.joueurCourant.afficherPions(){
-		ligne = ligne + "\(i).(x : \(elt.position.y) , y : \(elt.position.x))\t\t"
+		ligne = ligne + "\(i).(x : \(elt.position.x) , y : \(elt.position.y))\t\t"
 		i = i + 1
 	}
 	print(ligne)
