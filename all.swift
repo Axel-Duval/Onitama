@@ -357,7 +357,7 @@ class Partie : TPartie {
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
-		//J1 ou j2 n'as plus de pions
+		//j1 ou j2 n'as plus de pions
 		if(j1.nombrePions() == 0) || (j2.nombrePions() == 0){
 			return true
 		}
@@ -709,20 +709,19 @@ func saisirNom(num : Int)->String {
 var nomjoueur1 : String = saisirNom(num : 1)
 var nomjoueur2 : String = saisirNom(num : 2)
 
-var joueur1: Joueur = Joueur(nom : nomjoueur1, couleur : Couleur.Rouge)
-var joueur2: Joueur = Joueur(nom : nomjoueur2, couleur : Couleur.Bleu)
+var joueur1 : Joueur = Joueur(nom : nomjoueur1, couleur : Couleur.Rouge)
+var joueur2 : Joueur = Joueur(nom : nomjoueur2, couleur : Couleur.Bleu)
 var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 
-//Cette variable est pour savoir si le joueur a joue ou non
+//Cette variable est pour savoir si le joueur a joué ou non
 var pass : Bool = false
-/*var temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
+var temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
 var onitama = "\n\n\n                _____       _ _\n               |  _  |     (_) |\n               | | | |_ __  _| |_ __ _ _ __ ___   __ _\n               | | | | '_ \\| | __/ _` | '_ ` _ \\ / _` |\n               \\ \\_/ / | | | | || (_| | | | | | | (_| |\n                \\___/|_| |_|_|\\__\\__,_|_| |_| |_|\\__,_|\n"
 var parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/"
 print(onitama)
 print(temple)
 print(parch)
 
- */
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	var ligne : String = ""
 	//On affiche le plateau
@@ -786,10 +785,10 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 
 var nom : String
 if (partie.gagnant().couleur == partie.joueur1.couleur) {
-	nom = self.joueur1.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))
+	nom = self.joueur1.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 else {
-	nom = self.joueur2.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))
+	nom = self.joueur2.nom + "." + String(repeating : " ", count : (19 - self.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 
 let bravo = "\n\n  ____                                                 _        _\n |  _ \\                                               | |      //\n | |_) |_ __ __ ___   _____    ___  ___ __ _ _ __ __ _| |__   ___\n |  _ <| '__/ _` \\ \\ / / _ \\  / __|/ __/ _` | '__/ _` | '_ \\ / _ \\\n | |_) | | | (_| |\\ V / (_) | \\__ \\ (_| (_| | | | (_| | |_) |  __/\n |____/|_|  \\__,_| \\_/ \\___/  |___/\\___\\__,_|_|  \\__,_|_.__/ \\___|\n\n"
