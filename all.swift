@@ -353,35 +353,34 @@ class Partie : TPartie {
 			self.plateau[i][0].setPion(pion : self.joueur1.listePions[i])
 			self.plateau[i][4].setPion(pion : self.joueur2.listePions[i])
 		}
-		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()! 
-		self.joueurCourant = self.joueur1
+		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
 		//J1 ou j2 n'as plus de pions
 		if(j1.nombrePions() == 0) || (j2.nombrePions() == 0){
-			return false
+			return true
 		}
 		else{
 			//On regarde si les deux joueurs possedent encore leurs maitres
-			var finie : Bool = true
+			var nbMaitre : Int = 0
 			for elt in j1.afficherPions(){
 				if (elt.estMaitre()){
-					finie = false
-					if elt.position.x == 2 && elt.position.y == 4{
-						finie = true
+					nbMaitre = nbMaitre + 1
+					if ((elt.position.x == 2) && elt.position.y == 4)){
+						return true
 					}
 				}
 			}
 			for elt in j2.afficherPions(){
 				if (elt.estMaitre()){
-					finie = false
-					if elt.position.x == 2 && elt.position.y == 0{
-						finie = true
+					nbMaitre = nbMaitre + 1
+					if ((elt.position.x == 2) && (elt.position.y == 0)){
+						return true
 					}
 				}
 			}
-			return finie
+			return (nbMaitre != 2)
 		}
 	}
 
@@ -389,36 +388,22 @@ class Partie : TPartie {
 
 	func gagnant() -> Joueur{
 		//Si le joueur 2 a perdu tous ses pions
-		if (self.joueur2.nombrePions() == 0){
-			return self.joueur1
-		}
-		//Si le joueur 1 a perdu tous ses pions
-		else if (self.joueur1.nombrePions() == 0){
+		if(self.joueur1.nombrePions() == 0){
 			return self.joueur2
 		}
+		else if(self.joueur2.nombrePions() == 0){
+			return self.joueur1
+		}
 		else{
-			//On regarde si les deux joueurs possedent encore leurs maitres
-			var finie : Bool = true
+			//On regarde si le joueur 1 possede encore son maitre
 			for elt in self.joueur1.afficherPions(){
 				if (elt.estMaitre()){
-					finie = false
-					if elt.position.x == 2 && elt.position.y == 4{
+					if ((elt.position.x == 2) && elt.position.y == 4)){
 						return self.joueur1
 					}
 				}
 			}
-			for elt in self.joueur2.afficherPions(){
-				if (elt.estMaitre()){
-					if elt.position.x == 2 && elt.position.y == 0{
-						return self.joueur2
-					}
-				}
-			}
-			if finie{
-				return self.joueur2
-			}else{
-				return self.joueur1
-			}
+			return self.joueur2
 		}
 	}
 
@@ -479,9 +464,11 @@ class Partie : TPartie {
 	}
 
 	func deplacerPion(p : Pion, pos : Position){
-		if (self.getPosition(x : pos.x, y : pos.y).positionOcc() ){//Il y a un pion sur la position visee
+		if (self.getPosition(x : pos.x, y : pos.y).positionOcc() ){
+			//Il y a un pion sur la position visee
 			if (self.getPosition(x : pos.x, y : pos.y).pion!.joueur.couleur != p.joueur.couleur){
-				capturePion(p : self.getPosition(x : pos.x, y : pos.y).pion!)//On capture ce pion, c'est a dire qu'on le supprime du deck de l'autre joueur
+				//On capture ce pion, c'est a dire qu'on le supprime du deck de l'autre joueur
+				capturePion(p : self.getPosition(x : pos.x, y : pos.y).pion!)
 		
 			}
 		}
@@ -496,8 +483,10 @@ class Partie : TPartie {
 			}
 			
 		}
-		self.getPosition(x : pos.x, y : pos.y).pion = p//On dis que le pion sur la position visee est desormais le pion passe en parametre
-		self.getPosition(x : pos.x, y : pos.y).pion!.position = self.getPosition(x : pos.x, y : pos.y)//On dit que l'emplacement du pion devient l'emplacement vise
+		//On dis que le pion sur la position visee est desormais le pion passe en parametre
+		self.getPosition(x : pos.x, y : pos.y).pion = p
+		//On dit que l'emplacement du pion devient l'emplacement vise
+		self.getPosition(x : pos.x, y : pos.y).pion!.position = self.getPosition(x : pos.x, y : pos.y)
 
 	}
 
