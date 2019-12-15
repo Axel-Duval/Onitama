@@ -708,7 +708,7 @@ var parch = "                    ______________________________\n               
 let space = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 print(onitama)
 print(temple)
-print("/\\ Vous venez de recevoir un parchemin, pressez sur une touche pour le lire /\\ \n")
+print("~ Vous venez de recevoir un parchemin, pressez sur une touche pour le lire ~\n")
 var enter = readLine()//Pour n'afficher le reste que si le joueur reagit
 print(parch)
 print("               Pressez une touche pour commencer le combat...\n")
@@ -730,9 +730,9 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	}
 	print(ligne)
 	//On affiche les cartes du joueur courant
-	print(">>\n>> et voici vos cartes :\t1.<\(partie.joueurCourant.afficherCartes()[0].nom)>\t\t2.<\(partie.joueurCourant.afficherCartes()[1].nom)>\n>>")
+	print(">>\n>> et voici vos cartes :\t\t1.<\(partie.joueurCourant.afficherCartes()[0].nom)>\t\t2.<\(partie.joueurCourant.afficherCartes()[1].nom)>\n>>")
 	//On afiche aussi la carte courante
-	print(">> voici la carte courante :\t<\(partie.carteCourante.afficherCarte())>\n>>")
+	print(">> voici la carte courante :\t\t1.<\(partie.carteCourante.afficherCarte())>\n>>")
 	//On dit que le joueur viens d'avoir la main il n'a donc pas encore pose de pion
 	pass = false
 	//Tant que le joueur peut jouer et qu'il n'a pas poser de pion
@@ -767,7 +767,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
 				//Il capture le pion adverse
-				var sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse elimine\n\n\n\n\n\n\n\n\n\n"
+				var sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse elimine\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 				print(space)
 				print(sword)
 				print("               Pressez une touche pour continuer le combat...\n")
