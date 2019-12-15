@@ -304,18 +304,18 @@ class Partie : TPartie {
 		//On creer les mouvements pour les deplacements
 		let arriere : Position = Position(x : 1, y : 0, pion : nil)
 		let avant : Position = Position(x : -1, y : 0, pion : nil)
-		let gauche : Position = Position(x : 0, y : -1, pion : nil)
-		let droite : Position = Position(x : 0, y : 1, pion : nil)
-		let diago_avant_droite : Position = Position(x : -1, y : 1, pion : nil)
-		let diago_avant_gauche : Position = Position(x : -1, y : -1, pion : nil)
-		let diago_arriere_gauche : Position = Position(x : 1, y : -1, pion : nil)
-		let diago_arriere_droite : Position = Position(x : 1, y : 1, pion : nil)
+		let gauche : Position = Position(x : 0, y : 1, pion : nil)
+		let droite : Position = Position(x : 0, y : -1, pion : nil)
+		let diago_avant_droite : Position = Position(x : -1, y : -1, pion : nil)
+		let diago_avant_gauche : Position = Position(x : -1, y : 1, pion : nil)
+		let diago_arriere_gauche : Position = Position(x : 1, y : 1, pion : nil)
+		let diago_arriere_droite : Position = Position(x : 1, y : -1, pion : nil)
 		let double_arriere : Position = Position(x : 2, y : 0, pion : nil)
 		let double_avant : Position = Position(x : -2, y : 0, pion : nil)
-		let double_gauche : Position = Position(x : 0, y : -2, pion : nil)
-		let double_droite : Position = Position(x : 0, y : 2, pion : nil)
-		let double_diago_avant_droite : Position = Position(x : -1, y : 2, pion : nil)
-		let double_diago_avant_gauche : Position = Position(x : -1, y : -2, pion : nil)
+		let double_gauche : Position = Position(x : 0, y : 2, pion : nil)
+		let double_droite : Position = Position(x : 0, y : -2, pion : nil)
+		let double_diago_avant_droite : Position = Position(x : -1, y : -2, pion : nil)
+		let double_diago_avant_gauche : Position = Position(x : -1, y : 2, pion : nil)
 		//On creer les cartes
 		let coq : Carte = Carte(nom : "coq", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
 		let crabe : Carte = Carte(nom : "crabe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
@@ -767,11 +767,13 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 			//Si grace a ce mouvement il tombe sur un pion adverse
 			if (mouvementChoisi.positionOcc()){
 				//Il capture le pion adverse
-				/*var sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse eliminé\n\n"
-				print(sword) */
-				partie.capturePion(p : mouvementChoisi.getPion()!)
+				var sword = "\n\n,_._._._._._._._._|__________________________________________________________,\n|_|_|_|_|_|_|_|_|_|_________________________________________________________/\n                  !         Bravo, pion du joueur adverse elimine\n\n\n\n\n\n\n\n\n\n"
+				print(space)
+				print(sword)
+				print("               Pressez une touche pour continuer le combat...\n")
+				enter = readLine()//Pour n'afficher le reste que si le joueur reagit
+
 			}
-			print("Pas de pion adverse capture")
 			//On deplace reelement le pion a son nouvel emplacement
 			partie.deplacerPion(p : pionChoisi, pos : mouvementChoisi)
 			//On echange la carte jouee avec la carte courante
