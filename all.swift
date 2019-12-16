@@ -1,4 +1,3 @@
-//attention ligne 337,356
 protocol TCarte{
 	
 	//Nom de la carte
@@ -335,7 +334,7 @@ class Partie : TPartie {
 		let cobra : Carte = Carte(nom : "cobra", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_arriere_droite,diago_avant_droite])
 		//On affecte les cartes aux joueurs
 		var all_cards : [Carte] = [porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille,cobra,oie,coq,mante,crabe]
-		var cards : [Carte] = all_cards//.shuffled()
+		var cards : [Carte] = all_cards.shuffled()
 		self.joueur1.listeCartes = [cards[0],cards[1]]
 		self.joueur2.listeCartes = [cards[2],cards[3]]
 		self.carteCourante = cards[4]
@@ -346,8 +345,7 @@ class Partie : TPartie {
 				self.plateau[l][c] = Position(x : c, y : l, pion : nil)
 			}
 		}
-		//self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
-		self.joueurCourant = self.joueur1
+		self.joueurCourant = [self.joueur1,self.joueur2].randomElement()!
 		//On affecte la bonne position aux pions des 2 joueurs
 		for i in 0...4{
 			self.joueur1.listePions[i].position = self.getPosition(x : 0, y : i)
@@ -789,7 +787,7 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 }
 
 var nom : String
-if (partie.gagnant().couleur == partie.joueur1.couleur) {
+if (partie.gagnant() === partie.joueur1) {
 	nom = partie.joueur1.nom + "." + String(repeating : " ", count : (20 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
 }
 else {
