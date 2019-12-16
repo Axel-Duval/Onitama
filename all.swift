@@ -318,8 +318,8 @@ class Partie : TPartie {
 		let double_diago_avant_gauche : Position = Position(x : -1, y : 2, pion : nil)
 		//On creer les cartes
 		let coq : Carte = Carte(nom : "coq", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
+		let porc : Carte = Carte(nom : "porc", couleur : Couleur.Rouge, listeMouvements : [gauche,arriere,avant])
 		let crabe : Carte = Carte(nom : "crabe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
-		let porc : Carte = Carte(nom : "porc", couleur : Couleur.Rouge, listeMouvements : [avant,droite,gauche])
 		let dragon : Carte = Carte(nom : "dragon", couleur : Couleur.Rouge, listeMouvements : [diago_arriere_gauche,diago_arriere_droite,double_diago_avant_gauche,double_diago_avant_droite])
 		let singe : Carte = Carte(nom : "singe", couleur : Couleur.Rouge, listeMouvements : [diago_avant_gauche,diago_arriere_gauche,diago_avant_droite,diago_arriere_droite])
 		let tigre : Carte = Carte(nom : "tigre", couleur : Couleur.Rouge, listeMouvements : [arriere, double_avant])
