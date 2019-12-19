@@ -663,19 +663,19 @@ func affichePlateau(partie : Partie){
 				var pionCourant : Pion = partie.getPosition(x : c, y : l).getPion()!
 				var forme : String
 				if (pionCourant.joueur.couleur == partie.joueur1.couleur) && (!pionCourant.estMaitre()){
-					// les pions du joueur 1 prend la forme O
+					// les eleves du joueur 1 prennent la forme carré vide
 					forme = "\u{25A1}"
 				}
 				else if (pionCourant.joueur.couleur == partie.joueur1.couleur) && (pionCourant.estMaitre()){
-					// les pions du joueur 1 prend la forme O
+					// le maitre du joueur 1 prend la forme carré plein
 					forme = "\u{25A0}"
 				}
 				else if (pionCourant.joueur.couleur == partie.joueur2.couleur) && (!pionCourant.estMaitre()){
-					// les pions du joueur 1 prend la forme O
+					// les eleves du joueur 2 prennent la forme disque vide
 					forme = "\u{25CB}"
 				}
 				else{
-					// les pions du joueur 2 prend la forme X
+					// le maitre du joueur 2 prend la forme disque plein
 					forme = "\u{25CF}"
 				}
 				ligne = ligne + forme + "\t"				
