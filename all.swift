@@ -23,7 +23,7 @@ protocol TCarte{
 	//afficherCarte: Carte -> String
 	// Affiche les propriétés d'une carte
 	// Pré: estFinie = false
-	// Post: retourne un string qui contient le nom et la couleur de la carte (autres params possible)
+	// Post: retourne un string qui contient le nom (et la couleur) de la carte (autres params possible)
 	func afficherCarte() -> String
 }
 
@@ -117,7 +117,7 @@ class Joueur : TJoueur {
 		//Obligation de definir des listes vides pour pouvoir ensuite initialiser les pions qui ont eux-meme besoin d'un joueur en parametre...
 		self.listePions = []
 		self.listeCartes = []
-		//init de pions avec position absurde (pions pas sur le plateau)
+		//init de pions avec position absurde (pions pas sur le plateau) mais c'est juste pour l'init
 		let pos : Position = Position(x : -10, y : -10, pion : nil)
 		let p1 : Pion = Pion(j : self, maitre : false, position : pos)
 		p1.position.pion = p1
@@ -315,7 +315,7 @@ class Partie : TPartie {
 		let double_droite : Position = Position(x : 0, y : -2, pion : nil)
 		let double_diago_avant_droite : Position = Position(x : -1, y : -2, pion : nil)
 		let double_diago_avant_gauche : Position = Position(x : -1, y : 2, pion : nil)
-		//On creer les cartes
+		//On creer les cartes avec les mouvements (referentiel : joueur2)
 		let coq : Carte = Carte(nom : "coq", couleur : Couleur.Rouge, listeMouvements : [droite, diago_avant_droite, gauche, diago_arriere_gauche])
 		let porc : Carte = Carte(nom : "porc", couleur : Couleur.Rouge, listeMouvements : [gauche,arriere,avant])
 		let crabe : Carte = Carte(nom : "crabe", couleur : Couleur.Rouge, listeMouvements : [double_droite,double_gauche,avant])
@@ -334,7 +334,9 @@ class Partie : TPartie {
 		let cobra : Carte = Carte(nom : "cobra", couleur : Couleur.Rouge, listeMouvements : [gauche,diago_arriere_droite,diago_avant_droite])
 		//On affecte les cartes aux joueurs
 		var all_cards : [Carte] = [porc,dragon,singe,tigre,grenouille,lapin,elephant,cheval,bison,sanglier,anguille,cobra,oie,coq,mante,crabe]
+		//On mélange les cartes
 		var cards : [Carte] = all_cards.shuffled()
+		//On distribue les cartes
 		self.joueur1.listeCartes = [cards[0],cards[1]]
 		self.joueur2.listeCartes = [cards[2],cards[3]]
 		self.carteCourante = cards[4]
@@ -386,10 +388,11 @@ class Partie : TPartie {
 	//func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
 
 	func gagnant() -> Joueur{
-		//Si le joueur 2 a perdu tous ses pions
+		//Si le joueur 1 a perdu tous ses pions
 		if(self.joueur1.nombrePions() == 0){
 			return self.joueur2
 		}
+		//Si le joueur 1 a perdu tous ses pions
 		else if(self.joueur2.nombrePions() == 0){
 			return self.joueur1
 		}
@@ -429,7 +432,8 @@ class Partie : TPartie {
 		else{
 			new_x = p.position.x - pos.x
 			new_y = p.position.y - pos.y
-		}		
+		}
+		//Il faut vérifier que ces positions appartiennent au plateau
 		if ((new_x >= 0) && (new_x <= 4) && (new_y >= 0) && (new_y <= 4)){
 			if (!self.getPosition(x : new_x, y : new_y).positionOcc()){
 				return true
@@ -479,7 +483,6 @@ class Partie : TPartie {
 
 	}
 
-
 	func capturePion(p : Pion) -> Bool {
 		//On doit supprimer le pion du deck de l'autre joueur
 		changerJoueur()//on change de joueur courant
@@ -489,7 +492,7 @@ class Partie : TPartie {
 			return true
 		}
 		else {//On ne peut pas supprimer ou il y a eu un probleme...
-			changerJoueur()
+			changerJoueur()//on change de joueur courant
 			return false
 		}
 	}
@@ -514,7 +517,7 @@ class Partie : TPartie {
 	func echangerCarte( l1 : [Carte], c1 : Carte, c2 : Carte){
 		var temp : Carte = self.carteCourante
 		self.carteCourante = c1
-		//On cherche la carte c1 dans le deck du joueur courant et on l'echange avec temp (ancienne carte courante)
+		//On cherche la carte c1 dans le deck du joueur courant et on l'echange avec :temp: (ancienne carte courante)
 		if (self.joueurCourant.listeCartes[0] === c1){
 			self.joueurCourant.listeCartes[0] = temp
 		}
@@ -531,8 +534,6 @@ protocol TPion{
 	var position : Position {get set}
 
 	var joueur : Joueur {get}
-
-
 
 	// estMaitre: Pion -> Bool
 	// Indique si le pion est maitre
@@ -623,6 +624,9 @@ class Position : TPosition{
 	}
 }
 
+/*									Programme principal									*/
+
+
 func saisirEntier(type : String, borneinf : Int, bornesup : Int) -> Int{
 	print(">> Veuillez choisir " + type + " : ")
 	guard let input = readLine() else{
@@ -690,16 +694,19 @@ func saisirNom(num : Int)->String {
 	}
 }
 
-
+//Demander les noms des joueurs
 var nomjoueur1 : String = saisirNom(num : 1)
 var nomjoueur2 : String = saisirNom(num : 2)
 
+//Création des joueurs
 var joueur1 : Joueur = Joueur(nom : nomjoueur1, couleur : Couleur.Rouge)
 var joueur2 : Joueur = Joueur(nom : nomjoueur2, couleur : Couleur.Bleu)
 var partie : Partie  = Partie(j1 : joueur1, j2 : joueur2)
 
 //Cette variable est pour savoir si le joueur a joué ou non
 var pass : Bool = false
+
+//Un peu d'affichage d'ascii art..
 var temple = "\n\n               )\\         O_._._._A_._._._O         /(\n                \\`--.___,'=================`.___,--'/\n                 \\`--._.__                 __._,--'/\n                   \\  ,. l`~~~~~~~~~~~~~~~'l ,.  /\n       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n       \\`-.__        ||_|____!!_|;|_!!____|_||        __,-'//\n        \\    `==---='-----------'='-----------`=---=='    //\n        | `--.                                         ,--' |\n         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',.  /\n           \\||  ____,-------._,-------._,-------.____  ||/\n            ||\\|___!`======='!`======='!`======='!___|/||\n            || |---||--------||-| | |-!!--------||---| ||\n  __O_____O_ll_lO_____O_____O|| |'|'| ||O_____O_____Ol_ll_O_____O__\n  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n                          /|=============|\\\n()______()______()______() '==== +-+ ====' ()______()______()______()\n||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n======================()  =================  ()======================\n----------------------/| ------------------- |\\----------------------\n                     / |---------------------| \\\n-'--'--'           ()  '---------------------'  ()\n                   /| ------------------------- |\\    --'--'--'\n       --'--'     / |---------------------------| \\    '--'\n                ()  |___________________________|  ()           '--'-\n  --'-          /| _______________________________  |\\|\n --'           / |__________________________________| \\ \n\n"
 var onitama = "\n\n\n                _____       _ _\n               |  _  |     (_) |\n               | | | |_ __  _| |_ __ _ _ __ ___   __ _\n               | | | | '_ \\| | __/ _` | '_ ` _ \\ / _` |\n               \\ \\_/ / | | | | || (_| | | | | | | (_| |\n                \\___/|_| |_|_|\\__\\__,_|_| |_| |_|\\__,_|\n"
 var parch = "                    ______________________________\n                  / \\                             \\\n                 |   |  Bienvenue petits scarabés |\n                  \\_ |  ''''''''''''''''''''''''' |\n                     | Les règles du jeu sont     |\n                     | simples, vous allez vous   |\n                     | affronter dans un combat   |\n                     | sans pitié où seul le plus |\n                     | rusé l'emportera.          |\n                     |                            |\n                     | Vous serez accompagné de   |\n                     | vos plus fidèles disciples |\n                     | pour accomplir cette tache.|\n                     |                            |\n                     | Bonne chance à vous deux ! |\n                     |   _________________________|___\n                     |  /                -Bruce Lee- /\n                     \\_/____________________________/\n\n"
@@ -713,6 +720,7 @@ print("               Pressez une touche pour commencer le combat...\n")
 enter = readLine()//Pour n'afficher le reste que si le joueur reagit
 print(space)
 
+//Boucle principale
 while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	//On affiche le plateau
 	print(space)
@@ -786,6 +794,8 @@ while(!partie.estFinie(j1 : partie.joueur1, j2 : partie.joueur2)){
 	partie.changerJoueur()
 }
 
+
+//Fin de partie, affichage du vainqueur
 var nom : String
 if (partie.gagnant() === partie.joueur1) {
 	nom = partie.joueur1.nom + "." + String(repeating : " ", count : (20 - partie.joueur1.nom.count))//formater correctement le nom pour le print final
@@ -799,4 +809,4 @@ var fin = "\n                    ______________________________\n               
 print(space)
 print(bravo)
 print(fin) 
-
+//FIN
