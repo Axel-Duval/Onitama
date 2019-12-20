@@ -358,55 +358,41 @@ class Partie : TPartie {
 	}
 
 	func estFinie(j1 : Joueur, j2 : Joueur) -> Bool{
-		//j1 ou j2 n'as plus de pions
-		if(j1.nombrePions() == 0) || (j2.nombrePions() == 0){
-			return true
-		}
-		else{
-			//On regarde si les deux joueurs possedent encore leurs maitres
-			var nbMaitre : Int = 0
-			for elt in j1.afficherPions(){
-				if (elt.estMaitre()){
-					nbMaitre = nbMaitre + 1
-					if ((elt.position.x == 4) && (elt.position.y == 2)){
-						return true
-					}
+		//On regarde si les deux joueurs possedent encore leurs maitres
+		var nbMaitre : Int = 0
+		for elt in j1.afficherPions(){
+			if (elt.estMaitre()){
+				nbMaitre = nbMaitre + 1
+				if ((elt.position.x == 4) && (elt.position.y == 2)){
+					return true
 				}
 			}
-			for elt in j2.afficherPions(){
-				if (elt.estMaitre()){
-					nbMaitre = nbMaitre + 1
-					if ((elt.position.x == 0) && (elt.position.y == 2)){
-						return true
-					}
+		}
+		for elt in j2.afficherPions(){
+			if (elt.estMaitre()){
+				nbMaitre = nbMaitre + 1
+				if ((elt.position.x == 0) && (elt.position.y == 2)){
+					return true
 				}
 			}
-			return (nbMaitre != 2)
 		}
+		return (nbMaitre != 2)
 	}
 
 	//func premierTour(p : Partie, c : Carte) // ne sert a rien car quand on créé une partie on doit définir le joueur courant
 
 	func gagnant() -> Joueur{
-		//Si le joueur 1 a perdu tous ses pions
-		if(self.joueur1.nombrePions() == 0){
-			return self.joueur2
-		}
-		//Si le joueur 1 a perdu tous ses pions
-		else if(self.joueur2.nombrePions() == 0){
-			return self.joueur1
-		}
-		else{
-			//On regarde si le joueur 1 possede encore son maitre
-			for elt in self.joueur1.afficherPions(){
-				if (elt.estMaitre()){
-					if ((elt.position.x == 2) && (elt.position.y == 4)){
-						return self.joueur1
-					}
+	
+		//On regarde si le joueur 1 possede encore son maitre
+		for elt in self.joueur1.afficherPions(){
+			if (elt.estMaitre()){
+				if ((elt.position.x == 2) && (elt.position.y == 4)){
+					return self.joueur1
 				}
 			}
-			return self.joueur2
 		}
+		return self.joueur2
+		
 	}
 
 	func changerJoueur(){
